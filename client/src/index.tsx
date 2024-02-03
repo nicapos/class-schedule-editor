@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./assets/css/index.css";
 import App from "./views/App";
 import reportWebVitals from "./lib/reportWebVitals";
+import ScheduleEditorPage from "./views/ScheduleEditorPage";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,7 +13,10 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/app" element={<ScheduleEditorPage />} />
+      </Routes>
     </BrowserRouter>
   </React.StrictMode>
 );
