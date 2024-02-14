@@ -6,7 +6,7 @@ import email_icon from '../assets/img/email.png'
 import password_icon from '../assets/img/password.png'
 
 function Login() {
-    const[action, setAction] = useState('LOGIN');
+    const [action, setAction] = useState('LOGIN');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,39 +14,60 @@ function Login() {
     function handleSubmit(e) {
         e.preventDefault();
         // Add form submission logic here
+        if (action === 'LOGIN') {
+            // Handle login
+        } else {
+            // Handle registration
+        }
     }
 
     return (
-
         <div className="container">
             <div className="header">
                 <div className='text'>{action}</div>
                 <div className='underline'></div>
-            </div>  
+            </div>
+            <form className='form' onSubmit={handleSubmit}>
+                {action === "LOGIN" ? null : (
+                    <div className='input'>
+                        <img src={user_icon} alt='' />
+                        <input
+                            type='text'
+                            placeholder='Username'
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
+                )}
 
-            <div className='inputs'>
-            {action==="LOGIN"? <div></div> : <div className='input'>
-                    <img src={user_icon} alt='' />
-                    <input type='text' placeholder='Username' />
-                </div>}
-                
                 <div className='input'>
                     <img src={email_icon} alt='' />
-                    <input type='email' placeholder='Email' />
-                </div> 
+                    <input
+                        type='email'
+                        placeholder='Email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
                 <div className='input'>
                     <img src={password_icon} alt='' />
-                    <input type='password' placeholder='Password' />
-                </div>     
-            </div>
-
-            {action==="REGISTER"? <div></div> : <div className='forgot-password'>Forgot Password? <span> Click Here</span></div>}
-
-            <div className='submit-container'>
-                <div className={action==="LOGIN"?"submit gray":"submit"} onClick={()=>{setAction("REGISTER")}}>REGISTER</div>
-                <div className={action==="REGISTER"?"submit gray":" submit"} onClick={()=>{setAction("LOGIN")}}>LOGIN</div>
-            </div>
-
+                    <input
+                        type='password'
+                        placeholder='Password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+                {action === "REGISTER" ? null : (
+                    <div className='forgot-password'>
+                        Forgot Password? <span> Click Here</span>
+                    </div>
+                )}
+                <div className='submit-container'>
+                    <button type="submit" className={action === "REGISTER" ? "submit gray" : "submit"} onClick={() => { setAction("LOGIN") }}>LOGIN</button>
+                    <button type="button" className={action === "LOGIN" ? "submit gray" : "submit"} onClick={() => { setAction("REGISTER") }}>REGISTER</button>
+                </div>
+            </form>
         </div>
     );
 }
