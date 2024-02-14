@@ -6,6 +6,7 @@ import "./assets/css/index.css";
 import App from "./views/App";
 import reportWebVitals from "./lib/reportWebVitals";
 import ScheduleEditorPage from "./views/ScheduleEditorPage";
+import LoginRegister from "./views/LoginRegister";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,6 +17,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/app" element={<ScheduleEditorPage />} />
+        <Route path="/loginregister" element={<LoginRegister />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
