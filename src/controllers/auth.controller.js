@@ -11,6 +11,11 @@ const controller = {
         .json({ error: "File size exceeds the limit of 5MB" });
     }
 
+    if (!req.file)
+      return res
+        .status(400)
+        .json({ error: "Invalid file type (accepts jpeg, jpg, png)" });
+
     if (!full_name)
       return res
         .status(400)
@@ -64,11 +69,9 @@ const controller = {
       const user = await User.findByEmailAndPassword(email, password);
 
       if (user) return res.status(200).json({ data: user });
-      return res
-        .status(400)
-        .json({
-          error: "Login failed. Please check your credentials and try again.",
-        });
+      return res.status(400).json({
+        error: "Login failed. Please check your credentials and try again.",
+      });
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
