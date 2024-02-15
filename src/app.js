@@ -2,6 +2,7 @@ const express = require("express");
 const { resolve } = require("path");
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
+const cors = require('cors');
 
 const routes = require("./routes");
 
@@ -9,6 +10,10 @@ const app = express();
 
 // serve static files generated from frontend build
 app.use(express.static(resolve(__dirname, "..", "client", "build")));
+
+// enable CORS
+const corsOptions = { origin: 'http://localhost:3000' };
+app.use(cors(corsOptions));
 
 // parses incoming request bodies to req.body property
 app.use(express.json());
