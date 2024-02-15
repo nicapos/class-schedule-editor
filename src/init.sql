@@ -14,6 +14,13 @@ CREATE TABLE IF NOT EXISTS users (
     user_type   ACCOUNT_TYPE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS class_schedule (
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(32),
+    user_id     INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+);
+
 DO $$ BEGIN
     CREATE TYPE WEEK_DAY AS ENUM('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
 EXCEPTION
@@ -26,13 +33,7 @@ CREATE TABLE IF NOT EXISTS class_items (
     day         WEEK_DAY NOT NULL,
     start_time  VARCHAR(5) NOT NULL,
     end_time    VARCHAR(5) NOT NULL,
-    location    VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS class_schedule (
-    id          SERIAL PRIMARY KEY,
-    user_id     INT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    class_id INT,
-    FOREIGN KEY (class_id) REFERENCES class_items(id)
+    location    VARCHAR(255) NOT NULL,
+    schedule_id INT,
+    FOREIGN KEY (schedule_id) REFERENCES class_schedule(id),
 );
