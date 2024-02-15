@@ -8,7 +8,7 @@ import dp_upload from '../assets/img/dp.png'
 ;
 
 function validateEmail(email){
-    var validEmailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+    var validEmailRegex = new RegExp("(^\\w?([,.-]\\w)?)*@\\w*.\\w{2,}$");
 
     if (email.match(validEmailRegex)) {
         return true;
@@ -110,13 +110,7 @@ function Login() {
         // Create a new Image object to check dimensions
         const image = new Image();
         image.onload = function() {
-            // Check image dimensions here
-            if (image.width > maxWidth || image.height > maxHeight) {
-                alert('Image dimensions exceed the maximum allowed size');
-            } else {
-                // Image is valid, set the avatar source
-                setAvatarSrc(imageSrc);
-            }
+            setAvatarSrc(imageSrc);
         };
         image.onerror = function() {
             // Error handling if the image cannot be loaded
