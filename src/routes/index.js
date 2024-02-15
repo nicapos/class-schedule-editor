@@ -1,13 +1,16 @@
 const { Router } = require("express");
 const multer = require("multer");
-const { pool } = require("../db");
 
 const authController = require("../controllers/auth.controller");
+const { checkFileType } = require("../utils/validation");
 
 const router = Router();
 const upload = multer({
   dest: "uploads/",
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (_req, file, cb) => {
+    checkFileType(file, cb);
+  },
 });
 
 router.get("/api/", (req, res) => {
@@ -21,10 +24,6 @@ router.post(
 );
 
 router.post("/auth/login", authController.login);
-
-router.get("/user", (req, res) => {});
-
-router.post("/user", (req, res) => {});
 
 router.post("/media", (req, res) => {});
 
