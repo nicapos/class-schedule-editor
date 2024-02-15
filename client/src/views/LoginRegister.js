@@ -5,7 +5,7 @@ import email_icon from '../assets/img/email.png'
 import password_icon from '../assets/img/password.png'
 import phone_icon from '../assets/img/phone.png'
 import placeholderImage from '../assets/img/dp.png'
-import { validateEmail, validatePassword, validatePhoneNumber, validateFullName, validateAndUploadDP } from '../lib/validation';
+import { validateEmail, validatePassword, validatePhoneNumber, validateFullName } from '../lib/validation';
 
 function Login() {
     const [action, setAction] = useState('LOGIN');
@@ -32,20 +32,20 @@ function Login() {
     }, [formMode]);
 
     function handleFileInputChange(event) {
-        const maxFileSize = 5 * 1024 * 1024; // 5MB 
+        // const maxFileSize = 5 * 1024 * 1024; // 5MB 
     
         const file = event.target.files[0];
         const reader = new FileReader();
     
         reader.onloadend = () => {
             const dataURL = reader.result;
-            const fileSizeInBytes = file.size;
+            // const fileSizeInBytes = file.size;
 
-            // Check file size
-            if (fileSizeInBytes > maxFileSize) {
-                alert('File size is too large');
-                return false;
-            }
+            // // Check file size
+            // if (fileSizeInBytes > maxFileSize) {
+            //     alert('File size is too large');
+            //     return false;
+            // }
             // Set the file object itself as the avatar source
             setAvatarSrc(file); // For uploading the image to the backend
             setAvatarImg(dataURL); // For displaying the image in the front end
@@ -63,7 +63,7 @@ function Login() {
         formData.append("email", email);
         formData.append("password", password);
         formData.append("phone_number", phoneNumber);
-        formData.append("full_name", avatarSrc);
+        formData.append("avatar", avatarSrc);
 
         fetch('http://localhost:8080/api/auth/register', { method: 'POST', body: formData })
             .then(response => {
@@ -128,7 +128,7 @@ function Login() {
                 }
     
                 // Validate and upload DP
-                validateAndUploadDP(avatarSrc);
+                // validateAndUploadDP(avatarSrc);
     
                 if (!validateEmail(email)) {
                     alert('Please enter a valid email');
