@@ -28,34 +28,34 @@ function validateFullName(fullName){
     return validFullNameRegex.test(fullName);
 }
 
-function validateAndUploadDP(files) {
-    var fileInput = files[0]; // Access the first file in the array
-    var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-    var maxFileSize = 5 * 1024 * 1024; // 5MB 
+// function validateAndUploadDP(files) {
+//     var fileInput = files[0]; // Access the first file in the array
+//     var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+//     var maxFileSize = 5 * 1024 * 1024; // 5MB 
 
-    // Check extension if the file is an image
-    if (!allowedExtensions.exec(fileInput.name)) {
-        alert('Invalid file type');
-        return false;
-    }
-    // Check file size
-    if (fileInput.size > maxFileSize) {
-        alert('File size is too large');
-        return false;
-    }
-    //Object validation
-    if (fileInput) {
-        var url = window.URL || window.webkitURL;
-        var image = new Image();
-        image.onload = function() {
-            alert('Valid Image');
-        };
-        image.onerror = function() {
-            alert('Invalid image');
-        };
-        image.src = url.createObjectURL(fileInput);
-    }
-}
+//     // Check extension if the file is an image
+//     if (!allowedExtensions.exec(fileInput.name)) {
+//         alert('Invalid file type');
+//         return false;
+//     }
+//     // Check file size
+//     if (fileInput.size > maxFileSize) {
+//         alert('File size is too large');
+//         return false;
+//     }
+//     //Object validation
+//     if (fileInput) {
+//         var url = window.URL || window.webkitURL;
+//         var image = new Image();
+//         image.onload = function() {
+//             alert('Valid Image');
+//         };
+//         image.onerror = function() {
+//             alert('Invalid image');
+//         };
+//         image.src = url.createObjectURL(fileInput);
+//     }
+// }
 
 
 
@@ -78,32 +78,33 @@ function Login() {
     }, [formMode]);
 
     function handleFileInputChange(event) {
+        const allowedExtensions = /(jpg|jpeg|png)$/i;
+        const maxFileSize = 5 * 1024 * 1024; // 5MB 
+    
         const file = event.target.files[0];
         const reader = new FileReader();
     
         reader.onloadend = () => {
-            // Perform validation before setting the new image
-            validateImage(reader.result);
+            const dataURL = reader.result;
+            const extension = file.name.split('.').pop().toLowerCase(); // Extracting the extension
+            const fileSizeInBytes = file.size;
+
+            if (!allowedExtensions.test(extension)) {
+                alert('Invalid file type');
+                return false;
+            }
+            // Check file size
+            if (fileSizeInBytes > maxFileSize) {
+                alert('File size is too large');
+                return false;
+            }
+            setAvatarSrc(dataURL);
         };
     
         if (file) {
             reader.readAsDataURL(file);
         }
-    }
-
-    function validateImage(imageSrc) {
-        // Create a new Image object to check dimensions
-        const image = new Image();
-        image.onload = function() {
-            setAvatarSrc(imageSrc);
-        };
-        image.onerror = function() {
-            // Error handling if the image cannot be loaded
-            alert('Failed to load the image');
-        };
-        // Set the image source to trigger the onload event
-        image.src = imageSrc;
-    }
+    }    
 
     // TODO: Connect to the database register user
     function registerToDB(){
@@ -181,7 +182,7 @@ function Login() {
                     return;
                 }
                 // Validate and upload DP   
-                validateAndUploadDP(avatarSrc);
+                // validateAndUploadDP(avatarSrc);
     
                 if (!validateEmail(email)) {
                     alert('Please enter a valid email');
