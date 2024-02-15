@@ -1,5 +1,7 @@
 const express = require("express");
 const { resolve } = require("path");
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 
 const routes = require("./routes");
 
@@ -11,6 +13,18 @@ app.use(express.static(resolve(__dirname, "..", "client", "build")));
 // parses incoming request bodies to req.body property
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// parses cookies
+app.use(cookieParser());
+
+// handles encrypted and signed cookies
+app.use(cookieSession({
+  name: 'session',
+  keys: [process.env.SECRET_KEY],
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  httpOnly: true,
+  secure: false,
+}));
 
 // Add other middlewares here
 

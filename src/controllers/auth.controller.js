@@ -59,7 +59,12 @@ const controller = {
         hashedPassword,
         phone_number
       );
-      return res.status(201).json({ data: user });
+      res.status(201).json({ data: user });
+
+      req.session.userId = user.id;
+      req.session.userEmail = user.email;
+
+      return;
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
@@ -83,7 +88,14 @@ const controller = {
     try {
       const user = await User.findByEmailAndPassword(email, hashedPassword);
 
-      if (user) return res.status(200).json({ data: user });
+      if (user) {
+        res.status(200).json({ data: user });
+
+        req.session.userId = user.id;
+        req.session.userEmail = user.email;
+
+        return;
+      }
       return res.status(400).json({
         error: "Login failed. Please check your credentials and try again.",
       });
@@ -91,6 +103,13 @@ const controller = {
       return res.status(400).json({ error: error.message });
     }
   },
+
+  logout: async (req, res) => {
+    // Clear session data (for cookie-session)
+    req.session = null;
+
+    return res.status(200).json({ message: "Logged out successfully" });
+  }
 };
 
 module.exports = controller;
