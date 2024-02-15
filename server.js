@@ -12,8 +12,5 @@ app.get("*", (req, res) => {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log("Preparing database...");
-  db.init().then(() => {
     console.log(`Server is running on port ${PORT}`);
-  });
 });
