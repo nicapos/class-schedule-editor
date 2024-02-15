@@ -7,40 +7,25 @@ import phone_icon from '../assets/img/phone.png'
 import dp_upload from '../assets/img/dp.png'
 ;
 
-function validateEmail(email){
-    var validEmailRegex = new RegExp("(^\\w?([,.-]\\w)?)*@\\w*.\\w{2,}$");
-
-    if (email.match(validEmailRegex)) {
-        return true;
-    }
-    return false;
+function validateEmail(email) {
+    const validEmailRegex = /(^\w?([,.-]\w)?)*@\w*.\w{2,}$/;
+    return validEmailRegex.test(email);
 }
 
 function validatePassword(password){
-    var validPasswordRegex = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{8,}$");
-
-    if (password.match(validPasswordRegex)) {
-        return true;
-    }
-    return false;
+    const validPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+    return validPasswordRegex.test(password);
 
 }
 
-function validatePhoneNumber(phonennumber){
-    var validPhoneNumberRegex = new RegExp("^\\d{7,13}$");
-
-    if (phonennumber.match(validPhoneNumberRegex)) {
-        return true;
-    }
-    return false;
+function validatePhoneNumber(phoneNumber){
+    const validPhoneNumRegex = /^\d{7,13}$/;
+    return validPhoneNumRegex.test(phoneNumber);
 }
-function validateFullName(fullname){
-    var validFullName = new RegExp("^[A-Z][a-z]*(?: [A-Z][a-z]*)*$");
 
-    if (fullname.match(validFullName)) {
-        return true;
-    }
-    return false;
+function validateFullName(fullName){
+    const validFullNameRegex = /[a-zA-Z ]{3,}/;
+    return validFullNameRegex.test(fullName);
 }
 
 function validateAndUploadDP(files) {
