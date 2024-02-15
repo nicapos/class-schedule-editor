@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js'
 import '../assets/css/LoginRegisterForm.css'
-
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 import user_icon from '../assets/img/person.png'
 import email_icon from '../assets/img/email.png'
 import password_icon from '../assets/img/password.png'
@@ -86,6 +87,7 @@ function Login() {
     const [password, setPassword] = useState('');
     const [formMode, setFormMode] = useState('LOGIN');
     const [avatarSrc, setAvatarSrc] = useState(dp_upload);
+    const history = useNavigate();
 
     useEffect(() => {
         // Clear form fields when switching between login and register
@@ -106,6 +108,14 @@ function Login() {
         if (file) {
             reader.readAsDataURL(file);
         }
+    }
+    function handleLogout() {
+        // Clear cookies
+        Cookies.remove('userId');
+        Cookies.remove('username');
+
+        // TODO: Handle redirect or UI changes after logout
+        history.push('/loginregister');
     }
 
     // TODO: Connect to the database register user
@@ -134,6 +144,9 @@ function Login() {
             // Handle success (e.g., show success message, redirect to login page)
             alert('Registration successful! Please proceed to login.');
             setAction('LOGIN'); // Switch back to login mode
+
+            Cookies.set('userId', data.userId, { expires: 7 }); // Set userId cookie with expiration of 7 days
+            Cookies.set('username', data.username, { expires: 7 }); 
         })
         .catch(error => {
             // Handle error (e.g., show error message)
