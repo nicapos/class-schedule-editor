@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS class_schedule (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(32),
     user_id     INT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 DO $$ BEGIN
@@ -35,5 +35,5 @@ CREATE TABLE IF NOT EXISTS class_items (
     end_time    VARCHAR(5) NOT NULL,
     location    VARCHAR(255) NOT NULL,
     schedule_id INT,
-    FOREIGN KEY (schedule_id) REFERENCES class_schedule(id),
+    FOREIGN KEY (schedule_id) REFERENCES class_schedule(id)
 );

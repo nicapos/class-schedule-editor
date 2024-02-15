@@ -52,13 +52,17 @@ const controller = {
       CryptoJS.enc.Base64
     );
 
+    const filename = req.file 
+      ? `http://localhost:8080/uploads/${encodeURIComponent(req.file.filename)}`
+      : null;
+
     try {
       const user = await User.create(
         full_name,
         email,
         hashedPassword,
         phone_number,
-        req.file?.filename ?? null
+        filename
       );
       res.status(201).json({ data: user });
 

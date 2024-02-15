@@ -9,7 +9,10 @@ const routes = require("./routes");
 const app = express();
 
 // serve static files generated from frontend build
-app.use(express.static(resolve(__dirname, "..", "client", "build")));
+// app.use(express.static(resolve(__dirname, "..", "client", "build")));
+
+// serve images saved to uploads
+app.use('/uploads', express.static('uploads'));
 
 // enable CORS
 const corsOptions = { origin: 'http://localhost:3000' };
