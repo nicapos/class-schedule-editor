@@ -4,65 +4,31 @@ import user_icon from '../assets/img/person.png'
 import email_icon from '../assets/img/email.png'
 import password_icon from '../assets/img/password.png'
 import phone_icon from '../assets/img/phone.png'
-import dp_upload from '../assets/img/dp.png'
-;
-
-function validateEmail(email) {
-    const validEmailRegex = /(^\w?([,.-]\w)?)*@\w*.\w{2,}$/;
-    return validEmailRegex.test(email);
-}
-
-function validatePassword(password){
-    const validPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
-    return validPasswordRegex.test(password);
-}
-
-function validatePhoneNumber(phoneNumber){
-    const validPhoneNumRegex = /^\d{7,13}$/;
-    return validPhoneNumRegex.test(phoneNumber);
-}
-
-function validateFullName(fullName){
-    const validFullNameRegex = /[a-zA-Z ]{3,}/;
-    return validFullNameRegex.test(fullName);
-}
-
-function validateAndUploadDP(files) {
-    var fileInput = files[0]; // Access the first file in the array
-    const allowedExtensions = /\.(jpg|jpeg|png)$/i;
-    const maxFileSize = 5 * 1024 * 1024; // 5 MB 
-
-    // Check extension if the file is an image
-    if (!allowedExtensions.test(fileInput.name)) {
-        alert('Invalid file type. Only JPG, JPEG, or PNG files are allowed.');
-        return false;
-    }
-
-    // Check file size
-    if (fileInput.size > maxFileSize) {
-        alert('File size is too large. Maximum allowed size is 5MB.');
-        return false;
-    }
-}
+import placeholderImage from '../assets/img/dp.png'
+import { validateEmail, validatePassword, validatePhoneNumber, validateFullName, validateAndUploadDP } from '../lib/validation';
 
 function Login() {
     const [action, setAction] = useState('LOGIN');
-    const [fullname, setUsername] = useState('');
-    const [phonennumber, setPhoneNumber] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [formMode, setFormMode] = useState('LOGIN');
     const [avatarSrc, setAvatarSrc] = useState(null); // For uploading the image to the backend
-    const [avatarImg, setAvatarImg] = useState(dp_upload); // For displaying the image in the front end
+    const [avatarImg, setAvatarImg] = useState(placeholderImage); // For displaying the image in the front end
 
-    useEffect(() => {
-        // Clear form fields when switching between login and register
-        setUsername('');
+    function clearForm() {
+        setFullName('');
         setPhoneNumber('');
         setEmail('');
         setPassword('');
         setAvatarSrc(null);
-        setAvatarImg(dp_upload);
+        setAvatarSrc(placeholderImage);
+    }
+
+    useEffect(() => {
+        // Clear form fields when switching between login and register
+        clearForm();
     }, [formMode]);
 
     function handleFileInputChange(event) {
@@ -74,12 +40,7 @@ function Login() {
         reader.onloadend = () => {
             const dataURL = reader.result;
             const fileSizeInBytes = file.size;
-            
-            // Check extension if the file is an image
-            if (!allowedExtensions.test(extension)) {
-                alert('Invalid file type');
-                return false;
-            }
+
             // Check file size
             if (fileSizeInBytes > maxFileSize) {
                 alert('File size is too large');
@@ -93,129 +54,112 @@ function Login() {
         if (file) {
             reader.readAsDataURL(file);
         }
-    }    
+    }  
 
     // TODO: Connect to the database register user
-    function registerToDB(){
-        fetch('http://localhost:8080/api/auth/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            fullname: fullname,
-            email: email,
-            password: password,
-            phonennumber:phonennumber,
-            avatar: avatarSrc
-        }),
-        })
-        .then(response => {
-            if (!response.ok) {
-            throw new Error('Registration failed');
-            }
-            // Registration successful
-            return response.json(); 
-        })
-        .then(data => {
-            // Handle success (e.g., show success message, redirect to login page)
-            alert('Registration successful! Please proceed to login.');
-            setAction('LOGIN'); // Switch back to login mode
-        })
-        .catch(error => {
-            // Handle error (e.g., show error message)
-            console.error('Registration error:', error.message);
-            alert('Registration failed. Please try again.');
-        });
+    function registerUser() {
+        const formData  = new FormData();
+        formData.append("full_name", fullName);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("phone_number", phoneNumber);
+        formData.append("full_name", avatarSrc);
+
+        fetch('http://localhost:8080/api/auth/register', { method: 'POST', body: formData })
+            .then(response => {
+                console.log(response)
+                if (response.status === 400) {
+                    throw new Error('Registration failed');
+                }
+
+                const data = response.json();
+                console.log(data);
+
+                alert('Registration successful! Please proceed to login.');
+                setAction('LOGIN');
+            })
+            .catch(error => {
+                console.error('Registration error:', error.message);
+                alert('Registration failed. Please try again.');
+            });
     }
 
+    function loginUser() {
+        fetch('http://localhost:8080/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: { email, password },
+        })
+            .then(response => {
+                if (response.status !== 200) {
+                    throw new Error('Login failed');
+                }
+                // TODO: If login is successful
+            });
+    }
+    
     function handleSubmit(e) {
         e.preventDefault();
     
-        if (action === 'LOGIN') {
-            // Switching
-        } else if (action === 'REGISTER') {
-            // Switching
-        } else if(action === 'CONFIRM LOGIN'){
-            // Validation checks: email, password
-            if (!email || !password) {
-                alert('Please fill in all fields');
-                setAction('LOGIN')
-                return;
-            }
-            // Check email if in database
-            fetch('/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                }),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Login failed');
-                }
-            })
-            // TODO: If Login is successful
-
-        } else if(action === 'CONFIRM REGISTRATION'){
-            var flag = 0;
-
-            // Validation checks: username, phone number, email, password
-                if (!fullname || !phonennumber || !email || !password) {
+        switch (action) {
+            case 'LOGIN':
+                // Handle login switching
+                break;
+            case 'REGISTER':
+                // Handle registration switching
+                break;
+            case 'CONFIRM LOGIN':
+                // Validation checks: email, password
+                if (!email || !password) {
                     alert('Please fill in all fields');
-                    setAction('REGISTER')
+                    setAction('LOGIN');
                     return;
                 }
-                // Validate and upload DP   
+                // Check email in the database
+                loginUser();
+                break;
+
+            case 'CONFIRM REGISTRATION':
+                // Validation checks: username, phone number, email, password
+                if (!fullName || !phoneNumber || !email || !password) {
+                    alert('Please fill in all fields');
+                    setAction('REGISTER');
+                    return;
+                }
+    
+                // Validate and upload DP
                 validateAndUploadDP(avatarSrc);
     
                 if (!validateEmail(email)) {
                     alert('Please enter a valid email');
-                    flag = 1;
-                    setAction('REGISTER')
+                    setAction('REGISTER');
                     return;
                 }
                 if (!validatePassword(password)) {
                     alert('Please enter a valid password');
-                    flag = 1;
-                    setAction('REGISTER')
+                    setAction('REGISTER');
                     return;
                 }
-                if (!validatePhoneNumber(phonennumber)) {
+                if (!validatePhoneNumber(phoneNumber)) {
                     alert('Please enter a valid phone number');
-                    flag = 1;
-                    setAction('REGISTER')
+                    setAction('REGISTER');
                     return;
                 }
-                if (!validateFullName(fullname)) {
+                if (!validateFullName(fullName)) {
                     alert('Please enter a valid full name');
-                    flag = 1;
-                    setAction('REGISTER')
+                    setAction('REGISTER');
                     return;
                 }
     
-                // Successful registration
-                registerToDB()
-                
-                // Clear form fields
-                setUsername('');
-                setPhoneNumber('');
-                setEmail('');
-                setPassword('');
-                setAvatarSrc(dp_upload);
-                setAvatarImg(dp_upload);
+                registerUser();
+                clearForm();
     
                 // Switch back to login mode
-                
-                if(flag !== 1){
-                    alert('Registration successful!');
-                    setAction('LOGIN'); 
-                }
-            
+                alert('Registration successful!');
+                setAction('LOGIN');
+                break;
+            default:
+                break;
         }
     }
 
@@ -258,8 +202,8 @@ function Login() {
                             type='text'
                             name='full_name'
                             placeholder='Full Name'
-                            value={fullname}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
                         />
                     </div>
                 )}
@@ -271,7 +215,7 @@ function Login() {
                             type='tel'
                             name='phone_number'
                             placeholder='Phone Number'
-                            value={phonennumber}
+                            value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                         />
                     </div>
