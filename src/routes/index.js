@@ -2,6 +2,7 @@ const { Router } = require("express");
 const multer = require("multer");
 
 const authController = require("../controllers/auth.controller");
+const userController = require("../controllers/user.controller");
 const { checkFileType } = require("../utils/validation");
 
 const router = Router();
@@ -38,6 +39,6 @@ router.post(
 
 router.post("/auth/login", authController.login);
 
-router.post("/media", (req, res) => {});
+router.get("/users", userController.getAllUsers);
 
 module.exports = router;
