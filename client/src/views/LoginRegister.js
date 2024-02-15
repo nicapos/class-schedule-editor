@@ -37,7 +37,7 @@ function validatePhoneNumber(phonennumber){
     return false;
 }
 function validateFullName(fullname){
-    var validFullName = new RegExp("^[a-z ,.'-]+$/i");
+    var validFullName = new RegExp("^[A-Z][a-z]*(?: [A-Z][a-z]*)*$");
 
     if (fullname.match(validFullName)) {
         return true;
