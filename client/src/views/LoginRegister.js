@@ -15,7 +15,6 @@ function validateEmail(email) {
 function validatePassword(password){
     const validPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
     return validPasswordRegex.test(password);
-
 }
 
 function validatePhoneNumber(phoneNumber){
@@ -28,36 +27,23 @@ function validateFullName(fullName){
     return validFullNameRegex.test(fullName);
 }
 
-// function validateAndUploadDP(files) {
-//     var fileInput = files[0]; // Access the first file in the array
-//     var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-//     var maxFileSize = 5 * 1024 * 1024; // 5MB 
+function validateAndUploadDP(files) {
+    var fileInput = files[0]; // Access the first file in the array
+    const allowedExtensions = /\.(jpg|jpeg|png)$/i;
+    const maxFileSize = 5 * 1024 * 1024; // 5 MB 
 
-//     // Check extension if the file is an image
-//     if (!allowedExtensions.exec(fileInput.name)) {
-//         alert('Invalid file type');
-//         return false;
-//     }
-//     // Check file size
-//     if (fileInput.size > maxFileSize) {
-//         alert('File size is too large');
-//         return false;
-//     }
-//     //Object validation
-//     if (fileInput) {
-//         var url = window.URL || window.webkitURL;
-//         var image = new Image();
-//         image.onload = function() {
-//             alert('Valid Image');
-//         };
-//         image.onerror = function() {
-//             alert('Invalid image');
-//         };
-//         image.src = url.createObjectURL(fileInput);
-//     }
-// }
+    // Check extension if the file is an image
+    if (!allowedExtensions.test(fileInput.name)) {
+        alert('Invalid file type. Only JPG, JPEG, or PNG files are allowed.');
+        return false;
+    }
 
-
+    // Check file size
+    if (fileInput.size > maxFileSize) {
+        alert('File size is too large. Maximum allowed size is 5MB.');
+        return false;
+    }
+}
 
 function Login() {
     const [action, setAction] = useState('LOGIN');
@@ -108,7 +94,7 @@ function Login() {
 
     // TODO: Connect to the database register user
     function registerToDB(){
-        fetch('http://localhost:8080/auth/register', {
+        fetch('http://localhost:8080/api/auth/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -182,7 +168,7 @@ function Login() {
                     return;
                 }
                 // Validate and upload DP   
-                // validateAndUploadDP(avatarSrc);
+                validateAndUploadDP(avatarSrc);
     
                 if (!validateEmail(email)) {
                     alert('Please enter a valid email');
