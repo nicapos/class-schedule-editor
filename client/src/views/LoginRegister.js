@@ -10,7 +10,7 @@ import dp_upload from '../assets/img/dp.png'
 ;
 
 function validateEmail(email){
-    var validEmailRegex = new RegExp("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/");
+    var validEmailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/");
 
     if (email.match(validEmailRegex)) {
         return true;
@@ -19,7 +19,7 @@ function validateEmail(email){
 }
 
 function validatePassword(password){
-    var validPasswordRegex = new RegExp("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;")
+    var validPasswordRegex = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{8,}$");
 
     if (password.match(validPasswordRegex)) {
         return true;
@@ -37,7 +37,7 @@ function validatePhoneNumber(phonennumber){
     return false;
 }
 function validateFullName(fullname){
-    var validFullName = new RegExp("/^[a-z ,.'-]+$/i");
+    var validFullName = new RegExp("^[a-z ,.'-]+$/i");
 
     if (fullname.match(validFullName)) {
         return true;
@@ -47,7 +47,7 @@ function validateFullName(fullname){
 
 function validateAndUploadDP(input){
     var fileInput = input;
-    var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+    var allowedExtensions = /(\\.jpg|\\.jpeg|\\.png)$/i;
     var maxFileSize = 5 * 1024 * 1024; // 5MB 
 
     // Check extension if the file is an image
