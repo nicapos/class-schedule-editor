@@ -148,7 +148,7 @@ function Login() {
                     <div className='photo_input'>
                         <img src={dp_upload} alt='' />
                         <div className='upload_btn'>
-                            <input type='file' name="uploadPicture" accept="image/*" onChange="validateAndUploadDP(this);"/>
+                            <input type='file' name="avatar" accept="image/*" onChange="validateAndUploadDP(this);"/>
                         </div>
                     </div>
                 )}
@@ -158,6 +158,7 @@ function Login() {
                         <img src={user_icon} alt='' />
                         <input
                             type='text'
+                            name='full_name'
                             placeholder='Full Name'
                             value={fullname}
                             onChange={(e) => setUsername(e.target.value)}
@@ -170,6 +171,7 @@ function Login() {
                         <img src={phone_icon} alt='' />
                         <input
                             type='tel'
+                            name='phone_number'
                             placeholder='Phone Number'
                             value={phonennumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
@@ -181,6 +183,7 @@ function Login() {
                     <img src={email_icon} alt='' />
                     <input
                         type='email'
+                        name='email'
                         placeholder='Email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -190,6 +193,7 @@ function Login() {
                     <img src={password_icon} alt='' />
                     <input
                         type='password'
+                        name='password'
                         placeholder='Password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
