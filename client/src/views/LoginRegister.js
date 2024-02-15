@@ -30,7 +30,7 @@ function validatePassword(password){
 }
 
 function validatePhoneNumber(phonennumber){
-    var validPhoneNumberRegex = new RegExp("^\\+[1-9]{1}[0-9]{0,2}-[2-9]{1}[0-9]{2}-[2-9]{1}[0-9]{2}-[0-9]{4}$");
+    var validPhoneNumberRegex = new RegExp("^\\d{7,13}$");
 
     if (phonennumber.match(validPhoneNumberRegex)) {
         return true;
