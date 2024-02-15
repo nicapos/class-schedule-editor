@@ -35,6 +35,17 @@ const User = {
 
     return result.rows[0];
   },
+  findByEmailAndId: async (email, id) => {
+    const query =
+      "SELECT full_name, photo_url, email, user_type FROM users WHERE email = $1 and id = $2;";
+    const values = [email, id];
+
+    const client = await pool.connect();
+    const result = await client.query(query, values);
+    client.release();
+
+    return result.rows[0];
+  },
   getAll: async () => {
     const query =
       "SELECT full_name, photo_url, email, phone_num, user_type FROM users";

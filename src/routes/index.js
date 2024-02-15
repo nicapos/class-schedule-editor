@@ -32,13 +32,14 @@ router.get("/api/", (req, res) => {
 });
 
 router.post(
-  "/auth/register",
+  "/api/auth/register",
   upload.single("avatar"),
   authController.registerUser
 );
+router.post("/api/auth/login", authController.login);
+router.post("/api/auth/logout", authController.logout);
 
-router.post("/auth/login", authController.login);
-
-router.get("/users", userController.getAllUsers);
+router.get("/api/users", userController.getAllUsers);
+router.get("/api/me", userController.getCurrentUser)
 
 module.exports = router;
