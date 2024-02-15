@@ -83,6 +83,7 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [formMode, setFormMode] = useState('LOGIN');
+    const [avatarSrc, setAvatarSrc] = useState(dp_upload);
 
     useEffect(() => {
         // Clear form fields when switching between login and register
@@ -92,28 +93,27 @@ function Login() {
         setPassword('');
     }, [formMode]);
 
+    function handleFileInputChange(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            setAvatarSrc(reader.result);
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
-        // Add form submission logic here
         if (action === 'LOGIN') {
             // Handle login
-        } else {
+        } else if (action === 'REGISTER'){
             // Handle registration
-            // Validate the form
-            if (!fullname) {
-                alert('Please enter your full name');
-                return;
-            }
-            if (!phonennumber) {
-                alert('Please enter your phone number');
-                return;
-            }
-            if (!email) {
-                alert('Please enter your email');
-                return;
-            }
-            if (!password) {
-                alert('Please enter your password');
+            if (!fullname || !phonennumber || !email || !password) {
+                alert('Please fill in all fields');
                 return;
             }
 
@@ -134,15 +134,14 @@ function Login() {
                 return;
             }
 
-            let user = {
-                "email": email,
-                "password": CryptoJS.AES.encrypt(password, 'key').toString(),
-                "number": phonennumber,
-                "fullname": fullname
-            }
+            // Successful registration
+            setUsername('');
+            setPhoneNumber('');
+            setEmail('');
+            setPassword('');
 
-                    
-            console.log(`Registering user: ${fullname} - ${phonennumber} - ${email} - ${password}`);
+            alert('Registration successful!');
+            setAction('LOGIN'); // Switch back to login mode`
         }
     }
 
@@ -152,12 +151,12 @@ function Login() {
                 <div className='text'>{action}</div>
                 <div className='underline'></div>
             </div>
-            <form className='form' onSubmit={handleSubmit} encType='multipart/form-data'>
+            <form className='form' onSubmit={handleSubmit} encType='multipart/form-data' id="loginregform">
                 {action === "LOGIN" ? null : (
                     <div className='photo_input'>
-                        <img src={dp_upload} alt='' />
+                        <img src={avatarSrc} alt='' />
                         <div className='upload_btn'>
-                            <input type='file' name="avatar" accept="image/*" />
+                            <input type='file' name="avatar" accept="image/*" onChange={handleFileInputChange} />
                         </div>
                     </div>
                 )}
