@@ -46,25 +46,23 @@ function validateFullName(fullname){
     return false;
 }
 
-function validateAndUploadDP(input){
-    var fileInput = input;
+function validateAndUploadDP(files) {
+    var fileInput = files[0]; // Access the first file in the array
     var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
     var maxFileSize = 5 * 1024 * 1024; // 5MB 
 
     // Check extension if the file is an image
-    if (!allowedExtensions.exec(fileInput)) {
+    if (!allowedExtensions.exec(fileInput.name)) {
         alert('Invalid file type');
-        fileInput.value = '';
         return false;
     }
     // Check file size
-    if (fileInput[0].files[0].size > maxFileSize) {
+    if (fileInput.size > maxFileSize) {
         alert('File size is too large');
-        fileInput.value = '';
         return false;
     }
     //Object validation
-    if (fileInput.length && fileInput[0].files && fileInput[0].files.length) {
+    if (fileInput) {
         var url = window.URL || window.webkitURL;
         var image = new Image();
         image.onload = function() {
@@ -73,7 +71,7 @@ function validateAndUploadDP(input){
         image.onerror = function() {
             alert('Invalid image');
         };
-        image.src = url.createObjectURL(fileInput[0].files[0]);
+        image.src = url.createObjectURL(fileInput);
     }
 }
 
@@ -98,17 +96,19 @@ function Login() {
     }, [formMode]);
 
     function handleFileInputChange(event) {
-        const file = event.target.files[0];
+        const files = event.target.files;
+        const file = files[0]; // Access the first file in the array
+    
         const reader = new FileReader();
-
         reader.onloadend = () => {
             setAvatarSrc(reader.result);
         };
-
+    
         if (file) {
             reader.readAsDataURL(file);
         }
     }
+    
     function handleLogout() {
         // Clear cookies
         Cookies.remove('userId');
@@ -195,7 +195,7 @@ function Login() {
                     return;
                 }
                 // Validate and upload DP   
-                validateAndUploadDP(document.getElementById('loginregform').avatar);
+                validateAndUploadDP(avatarSrc);
     
                 if (!validateEmail(email)) {
                     alert('Please enter a valid email');
