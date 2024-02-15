@@ -9,12 +9,12 @@ const User = {
     photo_filename = null
   ) => {
     const query =
-      photo_filename != null
+      photo_filename == null
         ? "INSERT INTO users (full_name, email, password, phone_num, user_type) VALUES ($1, $2, $3, $4, 'USER') RETURNING *"
         : "INSERT INTO users (full_name, email, password, phone_num, photo_url, user_type) VALUES ($1, $2, $3, $4, $5, 'USER') RETURNING *";
 
     const values =
-      photo_filename != null
+      photo_filename == null
         ? [full_name, email, password, phone_number]
         : [full_name, email, password, phone_number, photo_filename];
 

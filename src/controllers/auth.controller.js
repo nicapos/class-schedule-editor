@@ -57,7 +57,8 @@ const controller = {
         full_name,
         email,
         hashedPassword,
-        phone_number
+        phone_number,
+        req.file?.filename ?? null
       );
       res.status(201).json({ data: user });
 
