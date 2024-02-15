@@ -64,7 +64,6 @@ function Login() {
     }, [formMode]);
 
     function handleFileInputChange(event) {
-        const allowedExtensions = /(jpg|jpeg|png)$/i;
         const maxFileSize = 5 * 1024 * 1024; // 5MB 
     
         const file = event.target.files[0];
@@ -72,13 +71,8 @@ function Login() {
     
         reader.onloadend = () => {
             const dataURL = reader.result;
-            const extension = file.name.split('.').pop().toLowerCase(); // Extracting the extension
             const fileSizeInBytes = file.size;
 
-            if (!allowedExtensions.test(extension)) {
-                alert('Invalid file type');
-                return false;
-            }
             // Check file size
             if (fileSizeInBytes > maxFileSize) {
                 alert('File size is too large');
@@ -242,7 +236,7 @@ function Login() {
                     <div className='photo_input'>
                         <img src={avatarSrc} alt='' />
                         <div className='upload_btn'>
-                            <input type='file' name="avatar" accept="image/*" onChange={handleFileInputChange} />
+                            <input type='file' name="avatar" accept="image/png, image/jpeg, image/jpg" onChange={handleFileInputChange} />
                         </div>
                     </div>
                 )}
