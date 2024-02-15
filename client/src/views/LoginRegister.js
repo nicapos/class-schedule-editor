@@ -108,7 +108,8 @@ function Login() {
         }
     }
 
-    function connectToDB(){
+    // TODO: Connect to the database register user
+    function registerToDB(){
         fetch('http://localhost:8080/auth/register', {
         method: 'POST',
         headers: {
@@ -127,7 +128,7 @@ function Login() {
             throw new Error('Registration failed');
             }
             // Registration successful
-            return response.json(); // If the server returns JSON data
+            return response.json(); 
         })
         .then(data => {
             // Handle success (e.g., show success message, redirect to login page)
@@ -149,19 +150,31 @@ function Login() {
         } else if (action === 'REGISTER') {
             // Switching
         } else if(action === 'CONFIRM LOGIN'){
-            // Handle login
-
             // Validation checks: email, password
             if (!email || !password) {
                 alert('Please fill in all fields');
                 setAction('LOGIN')
                 return;
             }
+            // Check email if in database
+            fetch('/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Login failed');
+                }
+            })
+            // TODO: If Login is successful
 
         } else if(action === 'CONFIRM REGISTRATION'){
-
-            // Handle registration 
-
             // Validation checks: username, phone number, email, password
                 if (!fullname || !phonennumber || !email || !password) {
                     alert('Please fill in all fields');
@@ -193,16 +206,17 @@ function Login() {
                 }
     
                 // Successful registration
-                connectToDB()
+                registerToDB()
                 
-
+                // Clear form fields
                 setUsername('');
                 setPhoneNumber('');
                 setEmail('');
                 setPassword('');
     
+                // Switch back to login mode
                 alert('Registration successful!');
-                setAction('LOGIN'); // Switch back to login mode
+                setAction('LOGIN'); 
             
         }
     }
