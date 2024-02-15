@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js'
 import '../assets/css/LoginRegisterForm.css'
 
@@ -82,6 +82,15 @@ function Login() {
     const [phonennumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [formMode, setFormMode] = useState('LOGIN');
+
+    useEffect(() => {
+        // Clear form fields when switching between login and register
+        setUsername('');
+        setPhoneNumber('');
+        setEmail('');
+        setPassword('');
+    }, [formMode]);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -148,7 +157,7 @@ function Login() {
                     <div className='photo_input'>
                         <img src={dp_upload} alt='' />
                         <div className='upload_btn'>
-                            <input type='file' name="avatar" accept="image/*" onChange="validateAndUploadDP(this);"/>
+                            <input type='file' name="avatar" accept="image/*" />
                         </div>
                     </div>
                 )}
@@ -205,8 +214,8 @@ function Login() {
                     </div>
                 )}
                 <div className='submit-container'>
-                    <button type="submit" className={action === "REGISTER" ? "submit gray" : "submit"} onClick={() => { setAction("LOGIN") }}>LOGIN</button>
-                    <button type="button" className={action === "LOGIN" ? "submit gray" : "submit"} onClick={() => { setAction("REGISTER") }}>REGISTER</button>
+                    <button type="submit" className={action === "REGISTER" ? "submit gray" : "submit"} onClick={() => { setAction("LOGIN"); setFormMode('LOGIN'); }}>LOGIN</button>
+                    <button type="button" className={action === "LOGIN" ? "submit gray" : "submit"} onClick={() => { setAction("REGISTER"); setFormMode('REGISTER'); }}>REGISTER</button>
                 </div>
             </form>
         </div>
