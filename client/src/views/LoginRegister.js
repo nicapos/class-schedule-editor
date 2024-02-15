@@ -95,14 +95,35 @@ function Login() {
     function handleFileInputChange(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
-
+    
         reader.onloadend = () => {
-            setAvatarSrc(reader.result);
+            // Perform validation before setting the new image
+            validateImage(reader.result);
         };
-
+    
         if (file) {
             reader.readAsDataURL(file);
         }
+    }
+
+    function validateImage(imageSrc) {
+        // Create a new Image object to check dimensions
+        const image = new Image();
+        image.onload = function() {
+            // Check image dimensions here
+            if (image.width > maxWidth || image.height > maxHeight) {
+                alert('Image dimensions exceed the maximum allowed size');
+            } else {
+                // Image is valid, set the avatar source
+                setAvatarSrc(imageSrc);
+            }
+        };
+        image.onerror = function() {
+            // Error handling if the image cannot be loaded
+            alert('Failed to load the image');
+        };
+        // Set the image source to trigger the onload event
+        image.src = imageSrc;
     }
 
     // TODO: Connect to the database register user
@@ -172,6 +193,8 @@ function Login() {
             // TODO: If Login is successful
 
         } else if(action === 'CONFIRM REGISTRATION'){
+            var flag = 0;
+
             // Validation checks: username, phone number, email, password
                 if (!fullname || !phonennumber || !email || !password) {
                     alert('Please fill in all fields');
@@ -183,21 +206,25 @@ function Login() {
     
                 if (!validateEmail(email)) {
                     alert('Please enter a valid email');
+                    flag = 1;
                     setAction('REGISTER')
                     return;
                 }
                 if (!validatePassword(password)) {
                     alert('Please enter a valid password');
+                    flag = 1;
                     setAction('REGISTER')
                     return;
                 }
                 if (!validatePhoneNumber(phonennumber)) {
                     alert('Please enter a valid phone number');
+                    flag = 1;
                     setAction('REGISTER')
                     return;
                 }
                 if (!validateFullName(fullname)) {
                     alert('Please enter a valid full name');
+                    flag = 1;
                     setAction('REGISTER')
                     return;
                 }
@@ -210,10 +237,14 @@ function Login() {
                 setPhoneNumber('');
                 setEmail('');
                 setPassword('');
+                setAvatarSrc(dp_upload)
     
                 // Switch back to login mode
-                alert('Registration successful!');
-                setAction('LOGIN'); 
+                
+                if(flag !== 1){
+                    alert('Registration successful!');
+                    setAction('LOGIN'); 
+                }
             
         }
     }
