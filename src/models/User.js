@@ -12,6 +12,17 @@ const User = {
 
     return result.rows[0];
   },
+  findByEmailAndPassword: async (email, password) => {
+    const query =
+      "SELECT full_name, photo_url, email, user_type FROM users WHERE email = $1 and password = $2;";
+    const values = [email, password];
+
+    const client = await pool.connect();
+    const result = await client.query(query, values);
+    client.release();
+
+    return result.rows[0];
+  },
 };
 
 module.exports = User;

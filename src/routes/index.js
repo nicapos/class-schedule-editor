@@ -20,22 +20,7 @@ router.post(
   authController.registerUser
 );
 
-router.post("/auth/login", (req, res) => {
-  const { email, password } = req.body;
-
-  const findQuery =
-    "SELECT full_name, photo_url, email, user_type FROM users WHERE email = $1 and password = $2;";
-  const values = [email, password];
-
-  pool.query(findQuery, values, (error, result) => {
-    if (error) {
-      console.error("Error executing query", error);
-      return res.status(400).json({ error });
-    } else {
-      res.status(200).json({ data: result.rows[0] });
-    }
-  });
-});
+router.post("/auth/login", authController.login);
 
 router.get("/user", (req, res) => {});
 

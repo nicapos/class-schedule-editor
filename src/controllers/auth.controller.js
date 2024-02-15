@@ -48,6 +48,31 @@ const controller = {
       return res.status(400).json({ error: error.message });
     }
   },
+
+  login: async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email)
+      return res.status(400).json({ error: "Missing required field 'email'" });
+
+    if (!password)
+      return res
+        .status(400)
+        .json({ error: "Missing required field 'password'" });
+
+    try {
+      const user = await User.findByEmailAndPassword(email, password);
+
+      if (user) return res.status(200).json({ data: user });
+      return res
+        .status(400)
+        .json({
+          error: "Login failed. Please check your credentials and try again.",
+        });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
+  },
 };
 
 module.exports = controller;
