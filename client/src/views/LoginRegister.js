@@ -52,7 +52,8 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [formMode, setFormMode] = useState('LOGIN');
-    const [avatarSrc, setAvatarSrc] = useState(dp_upload);
+    const [avatarSrc, setAvatarSrc] = useState(null); // For uploading the image to the backend
+    const [avatarImg, setAvatarImg] = useState(dp_upload); // For displaying the image in the front end
 
     useEffect(() => {
         // Clear form fields when switching between login and register
@@ -60,7 +61,8 @@ function Login() {
         setPhoneNumber('');
         setEmail('');
         setPassword('');
-        setAvatarSrc(dp_upload);
+        setAvatarSrc(null);
+        setAvatarImg(dp_upload);
     }, [formMode]);
 
     function handleFileInputChange(event) {
@@ -72,13 +74,20 @@ function Login() {
         reader.onloadend = () => {
             const dataURL = reader.result;
             const fileSizeInBytes = file.size;
-
+            
+            // Check extension if the file is an image
+            if (!allowedExtensions.test(extension)) {
+                alert('Invalid file type');
+                return false;
+            }
             // Check file size
             if (fileSizeInBytes > maxFileSize) {
                 alert('File size is too large');
                 return false;
             }
-            setAvatarSrc(dataURL);
+            // Set the file object itself as the avatar source
+            setAvatarSrc(file); // For uploading the image to the backend
+            setAvatarImg(dataURL); // For displaying the image in the front end
         };
     
         if (file) {
@@ -197,7 +206,8 @@ function Login() {
                 setPhoneNumber('');
                 setEmail('');
                 setPassword('');
-                setAvatarSrc(dp_upload)
+                setAvatarSrc(dp_upload);
+                setAvatarImg(dp_upload);
     
                 // Switch back to login mode
                 
@@ -234,7 +244,7 @@ function Login() {
 
                 {action === "LOGIN" ? null : (
                     <div className='photo_input'>
-                        <img src={avatarSrc} alt='' />
+                        <img src={avatarImg} alt='' />
                         <div className='upload_btn'>
                             <input type='file' name="avatar" accept="image/png, image/jpeg, image/jpg" onChange={handleFileInputChange} />
                         </div>
