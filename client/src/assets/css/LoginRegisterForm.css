@@ -1,8 +1,4 @@
 .body{
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     height: 100vh;
     background: linear-gradient(#6F7D8C, #6C596E, #4B2E39);
 }
@@ -10,7 +6,7 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    margin-top: 80px;
+    margin-top: 60px;
     /* background: linear-gradient(#4B2E39, #6C596E, #6F7D8C); */
     background: #fff;
     padding-bottom: 30px;
@@ -22,16 +18,15 @@
     flex-direction: column;
     align-items: center;
     margin-top: 50px;
-    gap: 9px;
     width: 100%;
 
+    /* border: #4B2E39 dashed 2px; */
 }
 
 .text{
     color:#4B2E39;
-    font-size: 48px;
+    font-size: 40px;
     font-weight: 700;
-
 }
 
 .underline{
@@ -41,11 +36,26 @@
     border-radius: 9px;
 }
 
-.inputs{
-    margin-top: 55px;
+.form{
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
     gap: 25px;
+}
+
+.photo_input{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo_input img{
+    width: 150px;
+    height: 150px;
+    /* border: #4B2E39 dashed 2px; */
+    object-fit: contain;
+    margin-right: 30px;
+    cursor: pointer;
 }
 
 .input{
@@ -55,7 +65,7 @@
     align-items: center;
     margin: auto;
     width: 480px;
-    height: 80px;
+    height: 60px;
     background-color: #eaeaea;
     border-radius: 6px;
 }
@@ -66,11 +76,11 @@
 
 .input input{
     width: 400px;
-    height: 50px;
+    height: 30px;
     border: none;
     outline: none;
     background: transparent;
-    font-size: 19px;
+    font-size: 16px;
     color: #4B2E39;
 }
 
@@ -92,7 +102,7 @@
     display: flex;
     justify-content: center;
     gap: 30px;
-    margin: 50px auto;
+    margin: 30px auto;
 }
 
 .submit{
@@ -100,11 +110,11 @@
     justify-content: center;
     align-items: center;
     width: 220px;
-    height: 60px;
+    height: 50px;
     color: #fff;
     background: #4B2E39;
     border-radius: 50px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
 }
@@ -112,3 +122,5 @@
     background: #EAEAEA;
     color: #676767;
 }
+
+/* Frontend inspo = YT: @GreatStackDev  */

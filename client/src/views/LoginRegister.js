@@ -4,10 +4,13 @@ import '../assets/css/LoginRegisterForm.css'
 import user_icon from '../assets/img/person.png'
 import email_icon from '../assets/img/email.png'
 import password_icon from '../assets/img/password.png'
+import phone_icon from '../assets/img/phone.png'
+import dp_upload from '../assets/img/dp.png'
 
 function Login() {
     const [action, setAction] = useState('LOGIN');
-    const [username, setUsername] = useState('');
+    const [fullname, setUsername] = useState('');
+    const [phonennumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -29,13 +32,34 @@ function Login() {
             </div>
             <form className='form' onSubmit={handleSubmit}>
                 {action === "LOGIN" ? null : (
+                    <div className='photo_input'>
+                        <img src={dp_upload} alt='' />
+                        <div className='upload_btn'>
+                            <input type='file'/>
+                        </div>
+                    </div>
+                )}
+                
+                {action === "LOGIN" ? null : (
                     <div className='input'>
                         <img src={user_icon} alt='' />
                         <input
                             type='text'
-                            placeholder='Username'
-                            value={username}
+                            placeholder='Full Name'
+                            value={fullname}
                             onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
+                )}
+
+                {action === "LOGIN" ? null : (
+                    <div className='input'>
+                        <img src={phone_icon} alt='' />
+                        <input
+                            type='tel'
+                            placeholder='Phone Number'
+                            value={phonennumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
                         />
                     </div>
                 )}
