@@ -76,6 +76,8 @@ function validateAndUploadDP(input){
     }
 }
 
+
+
 function Login() {
     const [action, setAction] = useState('LOGIN');
     const [fullname, setUsername] = useState('');
@@ -104,6 +106,39 @@ function Login() {
         if (file) {
             reader.readAsDataURL(file);
         }
+    }
+
+    function connectToDB(){
+        fetch('http://localhost:8080/auth/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            fullname: fullname,
+            email: email,
+            password: password,
+            phonennumber:phonennumber,
+            avatar: avatarSrc
+        }),
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Registration failed');
+            }
+            // Registration successful
+            return response.json(); // If the server returns JSON data
+        })
+        .then(data => {
+            // Handle success (e.g., show success message, redirect to login page)
+            alert('Registration successful! Please proceed to login.');
+            setAction('LOGIN'); // Switch back to login mode
+        })
+        .catch(error => {
+            // Handle error (e.g., show error message)
+            console.error('Registration error:', error.message);
+            alert('Registration failed. Please try again.');
+        });
     }
 
     function handleSubmit(e) {
@@ -158,7 +193,9 @@ function Login() {
                 }
     
                 // Successful registration
-                //localhost:8080/auth/register
+                connectToDB()
+                
+
                 setUsername('');
                 setPhoneNumber('');
                 setEmail('');
