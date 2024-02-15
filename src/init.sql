@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
     id          SERIAL PRIMARY KEY,
     full_name   VARCHAR(255) NOT NULL,
     email       VARCHAR(320) UNIQUE NOT NULL,
-    phone_num   VARCHAR(13),
+    password    VARCHAR(255) NOT NULL,
+    phone_num   VARCHAR(13) NOT NULL,
     photo_url   VARCHAR(255),
     user_type   ACCOUNT_TYPE NOT NULL
 );
