@@ -19,7 +19,7 @@ function validateEmail(email){
 }
 
 function validatePassword(password){
-    var validPasswordRegex = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{8,}$");
+    var validPasswordRegex = new RegExp("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;")
 
     if (password.match(validPasswordRegex)) {
         return true;
