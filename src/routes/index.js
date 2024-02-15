@@ -5,8 +5,21 @@ const authController = require("../controllers/auth.controller");
 const { checkFileType } = require("../utils/validation");
 
 const router = Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Set your desired destination folder
+  },
+  filename: function (req, file, cb) {
+    const originalname = file.originalname;
+    const uniqueFilename = `${Date.now()}-${originalname}`;
+
+    cb(null, uniqueFilename);
+  },
+});
+
 const upload = multer({
-  dest: "uploads/",
+  storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (_req, file, cb) => {
     checkFileType(file, cb);

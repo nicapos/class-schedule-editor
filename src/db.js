@@ -1,6 +1,9 @@
 const Pool = require("pg-pool");
 const fs = require("fs");
 const path = require("path");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
