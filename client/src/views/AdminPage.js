@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../assets/css/Admin.css'
 
 function AdminPage() {
   const [users, setUsers] = useState([]);
