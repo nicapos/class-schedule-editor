@@ -1,6 +1,10 @@
 const { resolve } = require("path");
+const dotenv = require("dotenv");
 
+const db = require("./src/db");
 const app = require("./src/app");
+
+dotenv.config();
 
 app.get("*", (req, res) => {
   res.sendFile(resolve(__dirname, "client", "build", "index.html"));
@@ -8,5 +12,8 @@ app.get("*", (req, res) => {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log("Preparing database...");
+  db.init().then(() => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
