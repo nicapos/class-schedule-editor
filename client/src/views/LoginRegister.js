@@ -10,7 +10,7 @@ import dp_upload from '../assets/img/dp.png'
 ;
 
 function validateEmail(email){
-    var validEmailRegex = new RegExp("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/");
+    var validEmailRegex = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
 
     if (email.match(validEmailRegex)) {
         return true;
@@ -19,7 +19,7 @@ function validateEmail(email){
 }
 
 function validatePassword(password){
-    var validPasswordRegex = new RegExp("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;")
+    var validPasswordRegex = new RegExp("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{8,}$");
 
     if (password.match(validPasswordRegex)) {
         return true;
@@ -37,7 +37,7 @@ function validatePhoneNumber(phonennumber){
     return false;
 }
 function validateFullName(fullname){
-    var validFullName = new RegExp("/^[a-z ,.'-]+$/i");
+    var validFullName = new RegExp("^[a-z ,.'-]+$/i");
 
     if (fullname.match(validFullName)) {
         return true;
@@ -108,41 +108,65 @@ function Login() {
 
     function handleSubmit(e) {
         e.preventDefault();
+    
         if (action === 'LOGIN') {
+            // Switching
+        } else if (action === 'REGISTER') {
+            // Switching
+        } else if(action === 'CONFIRM LOGIN'){
             // Handle login
-        } else if (action === 'REGISTER'){
-            // Handle registration
-            if (!fullname || !phonennumber || !email || !password) {
+
+            // Validation checks: email, password
+            if (!email || !password) {
                 alert('Please fill in all fields');
+                setAction('LOGIN')
                 return;
             }
 
-            if (!validateEmail(email)) {
-                alert('Please enter a valid email');
-                return;
-            }
-            if (!validatePassword(password)) {
-                alert('Please enter a valid password');
-                return;
-            }
-            if (!validatePhoneNumber(phonennumber)) {
-                alert('Please enter a valid phone number');
-                return;
-            }
-            if (!validateFullName(fullname)) {
-                alert('Please enter a valid full name');
-                return;
-            }
+        } else if(action === 'CONFIRM REGISTRATION'){
 
-            // Successful registration
-            //localhost:8080/auth/register
-            setUsername('');
-            setPhoneNumber('');
-            setEmail('');
-            setPassword('');
+            // Handle registration 
 
-            alert('Registration successful!');
-            setAction('LOGIN'); // Switch back to login mode`
+            // Validation checks: username, phone number, email, password
+                if (!fullname || !phonennumber || !email || !password) {
+                    alert('Please fill in all fields');
+                    setAction('REGISTER')
+                    return;
+                }
+                // Validate and upload DP   
+                validateAndUploadDP(document.getElementById('loginregform').avatar);
+    
+                if (!validateEmail(email)) {
+                    alert('Please enter a valid email');
+                    setAction('REGISTER')
+                    return;
+                }
+                if (!validatePassword(password)) {
+                    alert('Please enter a valid password');
+                    setAction('REGISTER')
+                    return;
+                }
+                if (!validatePhoneNumber(phonennumber)) {
+                    alert('Please enter a valid phone number');
+                    setAction('REGISTER')
+                    return;
+                }
+                if (!validateFullName(fullname)) {
+                    alert('Please enter a valid full name');
+                    setAction('REGISTER')
+                    return;
+                }
+    
+                // Successful registration
+                //localhost:8080/auth/register
+                setUsername('');
+                setPhoneNumber('');
+                setEmail('');
+                setPassword('');
+    
+                alert('Registration successful!');
+                setAction('LOGIN'); // Switch back to login mode
+            
         }
     }
 
@@ -153,6 +177,22 @@ function Login() {
                 <div className='underline'></div>
             </div>
             <form className='form' onSubmit={handleSubmit} encType='multipart/form-data' id="loginregform">
+
+                <div className='submit-container'>
+                    <button type="submit" className={action === "REGISTER" ? "submit gray" : "submit"} onClick={() => { 
+                        if (action === 'REGISTER') {
+                            setAction("LOGIN"); 
+                            setFormMode('LOGIN'); 
+                        }
+                    }}>LOGIN</button> 
+                    <button type="submit" className={action === "LOGIN" ? "submit gray" : "submit"} onClick={() => { 
+                        if (action === 'LOGIN') {
+                            setAction("REGISTER");
+                            setFormMode('REGISTER');
+                        }
+                    }}>REGISTER</button>
+                </div>
+
                 {action === "LOGIN" ? null : (
                     <div className='photo_input'>
                         <img src={avatarSrc} alt='' />
@@ -213,10 +253,30 @@ function Login() {
                         Forgot Password? <span> Click Here</span>
                     </div>
                 )}
+
+                {action === "REGISTER" ? null : (
+                    <div className='submit-container'>
+                        <button type="submit" className={"submit gray"} onClick={() => { 
+                                if (action === 'LOGIN') {
+                                    // TODO: Handle Login
+                                    setAction("CONFIRM LOGIN");
+                                }
+                        }}>CONFIRM LOGIN</button>
+                    </div>
+                )}
+
+                {action === "LOGIN" ? null : (
                 <div className='submit-container'>
-                    <button type="submit" className={action === "REGISTER" ? "submit gray" : "submit"} onClick={() => { setAction("LOGIN"); setFormMode('LOGIN'); }}>LOGIN</button>
-                    <button type="submit" className={action === "LOGIN" ? "submit gray" : "submit"} onClick={() => { setAction("REGISTER"); setFormMode('REGISTER'); }}>REGISTER</button>
+                    <button type="submit" className={"submit gray"} onClick={() => { 
+                            if (action === 'REGISTER') {
+                                // TODO: Handle Registration
+                                setAction("CONFIRM REGISTRATION");
+                            }
+                    }}>CONFIRM REGISTRATION</button>
                 </div>
+                )}
+                
+
             </form>
         </div>
     );
