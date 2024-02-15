@@ -20,8 +20,6 @@ async function initializeDB() {
     client.release();
   } catch (error) {
     console.error("Error: Failed to initialize database.", error);
-  } finally {
-    pool.end();
   }
 }
 
