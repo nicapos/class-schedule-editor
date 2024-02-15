@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const { isValid } = require("../utils/validation");
+const CryptoJS = require("crypto-js");
 
 const controller = {
   registerUser: async (req, res) => {
@@ -46,8 +47,11 @@ const controller = {
     if (!isValid("phone_number", phone_number))
       return res.status(400).json({ error: "Invalid 'phone_number' provided" });
 
+    //insert hashing password here
+    const hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64);
+
     try {
-      const user = await User.create(full_name, email, password, phone_number);
+      const user = await User.create(full_name, email, hashedPassword, phone_number);
       return res.status(201).json({ data: user });
     } catch (error) {
       return res.status(400).json({ error: error.message });
@@ -64,9 +68,11 @@ const controller = {
       return res
         .status(400)
         .json({ error: "Missing required field 'password'" });
+    
+    const hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64);
 
     try {
-      const user = await User.findByEmailAndPassword(email, password);
+      const user = await User.findByEmailAndPassword(email, hashedPassword);
 
       if (user) return res.status(200).json({ data: user });
       return res.status(400).json({
