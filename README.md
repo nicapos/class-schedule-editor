@@ -20,9 +20,15 @@ cd client && npm install
 
 5. Run `cd ..` to go back to the root project folder.
 
+6. Create a `.env` file following the format:
+```bash
+DATABASE_URL=
+SECRET_KEY=
+```
+
 ## Usage
 
-To run the application, run `npm run dev`.
+**To run the application, run `npm run dev`.**
 
 To run the frontend only, run `npm run dev:client` or `npm start --prefix ./client`.
 
