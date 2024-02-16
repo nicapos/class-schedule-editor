@@ -7,6 +7,7 @@ import phone_icon from '../assets/img/phone.png'
 import placeholderImage from '../assets/img/dp.png'
 import { validateEmail, validatePassword, validatePhoneNumber, validateFullName } from '../lib/validation';
 import { useNavigate } from 'react-router-dom';
+import App from './App';
 
 function Login() {
     const [action, setAction] = useState('LOGIN');
@@ -133,6 +134,9 @@ function Login() {
             if (response.status !== 200) {
                 const response_data = await response.text(); // convert the response to text
                 alert(response_data);
+            }
+            else{
+                navigate("/app");
             }
         } catch (error) {
             console.error(error);
