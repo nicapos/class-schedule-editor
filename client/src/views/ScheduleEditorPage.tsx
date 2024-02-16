@@ -9,6 +9,7 @@ export default function ScheduleEditorPage() {
   const [isLoading, setLoadingState] = useState<boolean>(true);
   const [name, setName] = useState<string>();
   const [photoURL, setPhotoURL] = useState<string>(placeholderAvatar);
+  const [isAdmin, setIsAdmin] = useState<boolean>();
 
   const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ export default function ScheduleEditorPage() {
         }
 
         setName(data.user.full_name);
+        setIsAdmin(data.user.user_type === "ADMIN");
         if (data.user.photo_url) {
           setPhotoURL(data.user.photo_url);
         }
@@ -46,6 +48,10 @@ export default function ScheduleEditorPage() {
     navigate("/login");
   }
 
+  function handleAdmin() {
+    navigate("/admin");
+  }
+
   // Fetch current user on enter page
   useEffect(getCurrentUser, []);
 
@@ -61,7 +67,10 @@ export default function ScheduleEditorPage() {
         <CalendarPreview />
       </div>
 
-      {!isLoading && <div className="absolute top-2 right-2">
+      {!isLoading && <div className="absolute top-2 right-2 flex gap-2">
+        {isAdmin && <button className="bg-gray-500 rounded-md text-sm" onClick={handleAdmin}>
+          Admin
+        </button>}
         <button className="bg-gray-500 rounded-md text-sm" onClick={handleLogout}>
           Log out
         </button>
