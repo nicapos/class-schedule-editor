@@ -84,82 +84,82 @@ function Login() {
             });
     }
 
+    function validateRegistration() {
+        // Validation checks: username, phone number, email, password
+        if (!fullName || !phoneNumber || !email || !password) {
+            alert('Please fill in all fields');
+            setAction('REGISTER');
+            return false;
+        }
+
+        // Validate and upload DP
+        // validateAndUploadDP(avatarSrc);
+
+        if (!validateEmail(email)) {
+            alert('Please enter a valid email');
+            setAction('REGISTER');
+            return false;
+        }
+        if (!validatePassword(password)) {
+            alert('Please enter a valid password');
+            setAction('REGISTER');
+            return false;
+        }
+        if (!validatePhoneNumber(phoneNumber)) {
+            alert('Please enter a valid phone number');
+            setAction('REGISTER');
+            return false;
+        }
+        if (!validateFullName(fullName)) {
+            alert('Please enter a valid full name');
+            setAction('REGISTER');
+            return false;
+        }
+
+        return true;
+    }
+
     function loginUser() {
-        fetch('http://localhost:8080/api/users/login', {
+        fetch('http://localhost:8080/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: { email, password },
+            body: JSON.stringify({ email, password }),
         })
             .then(response => {
+                console.log(response);
                 if (response.status !== 200) {
                     throw new Error('Login failed');
                 }
                 // TODO: If login is successful
             });
     }
+
+    function validateLogin() {
+        if (!email || !password) {
+            alert('Please fill in all fields');
+            setAction('LOGIN');
+            return false;
+        }
+
+        return true;
+    }
     
     function handleSubmit(e) {
         e.preventDefault();
-    
-        switch (action) {
-            case 'LOGIN':
-                // Handle login switching
-                break;
-            case 'REGISTER':
-                // Handle registration switching
-                break;
-            case 'CONFIRM LOGIN':
-                // Validation checks: email, password
-                if (!email || !password) {
-                    alert('Please fill in all fields');
-                    setAction('LOGIN');
-                    return;
-                }
-                // Check email in the database
-                loginUser();
-                break;
 
-            case 'CONFIRM REGISTRATION':
-                // Validation checks: username, phone number, email, password
-                if (!fullName || !phoneNumber || !email || !password) {
-                    alert('Please fill in all fields');
-                    setAction('REGISTER');
-                    return;
-                }
+        if (action === 'CONFIRM LOGIN') {
+            if (!validateLogin()) return;
+                
+            loginUser();
+        } else if (action === 'CONFIRM REGISTRATION') {
+            if (!validateRegistration()) return;
     
-                // Validate and upload DP
-                // validateAndUploadDP(avatarSrc);
-    
-                if (!validateEmail(email)) {
-                    alert('Please enter a valid email');
-                    setAction('REGISTER');
-                    return;
-                }
-                if (!validatePassword(password)) {
-                    alert('Please enter a valid password');
-                    setAction('REGISTER');
-                    return;
-                }
-                if (!validatePhoneNumber(phoneNumber)) {
-                    alert('Please enter a valid phone number');
-                    setAction('REGISTER');
-                    return;
-                }
-                if (!validateFullName(fullName)) {
-                    alert('Please enter a valid full name');
-                    setAction('REGISTER');
-                    return;
-                }
-    
-                registerUser();
-                clearForm();
-    
-                // Switch back to login mode
-                alert('Registration successful!');
-                setAction('LOGIN');
-                break;
-            default:
-                break;
+            registerUser();
+            clearForm();
+
+            // Switch back to login mode
+            alert('Registration successful!');
+            setAction('LOGIN');
         }
     }
 
