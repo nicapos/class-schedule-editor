@@ -66,9 +66,6 @@ const controller = {
       );
       res.status(201).json({ data: user });
 
-      req.session.userId = user.id;
-      req.session.userEmail = user.email;
-
       return;
     } catch (error) {
       return res.status(400).json({ error: error.message });
@@ -94,10 +91,10 @@ const controller = {
       const user = await User.findByEmailAndPassword(email, hashedPassword);
 
       if (user) {
-        res.status(200).json({ data: user });
-
         req.session.userId = user.id;
         req.session.userEmail = user.email;
+
+        res.status(200).json({ data: user });
 
         return;
       }

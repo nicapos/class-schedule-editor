@@ -26,7 +26,7 @@ const User = {
   },
   findByEmailAndPassword: async (email, password) => {
     const query =
-      "SELECT full_name, photo_url, email, user_type FROM users WHERE email = $1 and password = $2;";
+      "SELECT id, full_name, photo_url, email, user_type FROM users WHERE email = $1 and password = $2;";
     const values = [email, password];
 
     const client = await pool.connect();
@@ -37,7 +37,7 @@ const User = {
   },
   findByEmailAndId: async (email, id) => {
     const query =
-      "SELECT full_name, photo_url, email, user_type FROM users WHERE email = $1 and id = $2;";
+      "SELECT id, full_name, photo_url, email, user_type FROM users WHERE email = $1 and id = $2;";
     const values = [email, id];
 
     const client = await pool.connect();

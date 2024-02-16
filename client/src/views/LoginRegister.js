@@ -7,7 +7,6 @@ import phone_icon from '../assets/img/phone.png'
 import placeholderImage from '../assets/img/dp.png'
 import { validateEmail, validatePassword, validatePhoneNumber, validateFullName } from '../lib/validation';
 import { useNavigate } from 'react-router-dom';
-import App from './App';
 
 function Login() {
     const [action, setAction] = useState('LOGIN');
@@ -123,25 +122,25 @@ function Login() {
         return true;
     }
 
-    async function loginUser() {
+    function loginUser() {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (response.status !== 200) {
-                const response_data = await response.json(); // convert the response to text
-                alert(response_data.error());
-                return;
-            }
-            else{
+        fetch('http://localhost:8080/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            credentials: "include",
+        })
+            .then(response => response.json())
+            .then((data) =>  {
                 navigate("/app");
-            }
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Login failed. " + error.message);
+            });
         } catch (error) {
-            console.error(error);
-            // TODO: Handle the error appropriately, e.g., show an error message to the user
+            console.log(error);
+            alert("Login failed. " + error.message);
         }
     }
 
