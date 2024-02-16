@@ -104,7 +104,7 @@ function Login() {
             return false;
         }
         if (!validatePassword(password)) {
-            alert('Please enter a valid password');
+            alert('Password must contain at least one digit, one lowercase, one uppercase, one special character, and at least 8 characters long.');
             setAction('REGISTER');
             return false;
         }
