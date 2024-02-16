@@ -122,23 +122,22 @@ function Login() {
         return true;
     }
 
-    function loginUser() {
-        fetch('http://localhost:8080/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        })
-            .then(response => {
-                if (response.status !== 200) {
-                    throw new Error('Login failed');
-                }
-
-                navigate("/app");
-            })
-            .catch(error => {
-                console.log(error);
-                // TODO: handle error here
+    async function loginUser() {
+        try {
+            const response = fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
             });
+
+            if (response.status !== 200) {
+                const response_data = response.json();
+                throw new Error(response_data.error);
+            }
+        } catch (error) {
+            console.error(error);
+            // TODO: Handle the error appropriately, e.g., show an error message to the user
+        }
     }
 
     function validateLogin() {
