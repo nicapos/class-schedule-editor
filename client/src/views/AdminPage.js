@@ -1,12 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import '../assets/css/Admin.css'
+import { useNavigate } from 'react-router-dom';
+import { Loader2 as Spinner } from 'lucide-react';
 
 function AdminPage() {
   const [users, setUsers] = useState([]);
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedPassword, setEditedPassword] = useState('');
+  const [isLoading, setLoadingState] = useState(true);
+
+  const navigate = useNavigate();
+
+  function getCurrentUser() {
+    fetch("http://localhost:8080/api/me", {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+      },
+      credentials: "include",
+    })
+      .then(response => response.json())
+      .then((data) =>  {
+        if (!data.user || data.user.user_type !== "ADMIN") {
+          // No logged in user or non-admin logged-in user. Redirect back to login
+          navigate("/login");
+          return;
+        }
+
+        setLoadingState(false);
+      });
+  }
 
   useEffect(() => {
+    getCurrentUser();
+
     fetch('http://localhost:8080/admin/users') 
       .then(response => response.json())
       .then(data => setUsers(data))
@@ -36,7 +63,7 @@ function AdminPage() {
       .catch(error => console.error('Error updating user data:', error));
   };
 
-  return (
+  const renderPage = () => (
     <div className="container">
       <h1>Admin Panel</h1>
       <table>
@@ -96,6 +123,15 @@ function AdminPage() {
       </table>
     </div>
   );
+
+  const renderLoading = () => (
+    <div className="w-full h-screen flex flex-col items-center justify-center gap-4">
+      <Spinner className="h-32 w-32 animate-spin" />
+      <p>Loading app...</p>
+    </div>
+  )
+
+  return isLoading ? renderLoading() : renderPage();
 }
 
 export default AdminPage;
