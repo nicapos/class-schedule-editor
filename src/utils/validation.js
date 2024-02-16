@@ -4,7 +4,7 @@ const regex = {
   email: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
   password: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/,
   phone_number: /^\d{7,13}$/,
-  full_name: /^[A-Z][a-z]*(?: [A-Z][a-z]*)*$/,
+  full_name: /[a-zA-Z ]{3,}/,
 };
 
 function isValid(key, value) {
