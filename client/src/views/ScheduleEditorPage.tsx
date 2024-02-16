@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import CalendarPreview from "../components/CalendarPreview";
+import { Loader2 as Spinner } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
 const placeholderAvatar = "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
@@ -21,6 +22,12 @@ export default function ScheduleEditorPage() {
     })
       .then(response => response.json())
       .then((data) =>  {
+        if (!data.user) {
+          // No logged in user. Redirect back to login
+          navigate("/login");
+          return;
+        }
+
         setName(data.user.full_name);
         if (data.user.photo_url) {
           setPhotoURL(data.user.photo_url);
@@ -42,7 +49,7 @@ export default function ScheduleEditorPage() {
   // Fetch current user on enter page
   useEffect(getCurrentUser, []);
 
-  return (
+  const renderPage = () => (
     <div className="mx-auto min-h-screen flex flex-col items-center justify-center p-8 gap-8">
       <header className="text-center flex-0">
         <h1 className="lg:text-2xl text-lg font-bold">Class Schedule Maker</h1>
@@ -68,4 +75,13 @@ export default function ScheduleEditorPage() {
       </div>}
     </div>
   );
+
+  const renderLoading = () => (
+    <div className="w-full h-screen flex flex-col items-center justify-center gap-4">
+      <Spinner className="h-32 w-32 animate-spin" />
+      <p>Loading app...</p>
+    </div>
+  )
+
+  return isLoading ? renderLoading() : renderPage();
 }
