@@ -16,7 +16,7 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [formMode, setFormMode] = useState('LOGIN');
-    const [avatarSrc, setAvatarSrc] = useState(null); // For uploading the image to the backend
+    const [avatarSrc, setAvatarSrc] = useState(placeholderImage); // For uploading the image to the backend
     const [avatarImg, setAvatarImg] = useState(placeholderImage); // For displaying the image in the front end
 
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ function Login() {
         setPhoneNumber('');
         setEmail('');
         setPassword('');
-        setAvatarSrc(null);
+        setAvatarSrc(placeholderImage);
         setAvatarSrc(placeholderImage);
     }
 
@@ -134,6 +134,7 @@ function Login() {
             if (response.status !== 200) {
                 const response_data = await response.text(); // convert the response to text
                 alert(response_data);
+                return;
             }
             else{
                 navigate("/app");
