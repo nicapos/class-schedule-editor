@@ -143,23 +143,30 @@ function Login() {
 
         return true;
     }
+
+    function handleSubmitLogin() {
+        if (!validateLogin()) return;
+        loginUser();
+    }
+
+    function handleSubmitRegistration() {
+        if (!validateRegistration()) return;
+    
+        registerUser();
+        clearForm();
+
+        // Switch back to login mode
+        alert('Registration successful!');
+        setAction('LOGIN');
+    }
     
     function handleSubmit(e) {
         e.preventDefault();
 
         if (action === 'CONFIRM LOGIN') {
-            if (!validateLogin()) return;
-                
-            loginUser();
+            
         } else if (action === 'CONFIRM REGISTRATION') {
-            if (!validateRegistration()) return;
-    
-            registerUser();
-            clearForm();
-
-            // Switch back to login mode
-            alert('Registration successful!');
-            setAction('LOGIN');
+            
         }
     }
 
@@ -186,7 +193,7 @@ function Login() {
                     }}>REGISTER</button>
                 </div>
 
-                {action === "LOGIN" ? null : (
+                {action === "REGISTER" && (
                     <div className='photo_input'>
                         <img src={avatarImg} alt='' />
                         <div className='upload_btn'>
@@ -195,7 +202,7 @@ function Login() {
                     </div>
                 )}
                 
-                {action === "LOGIN" ? null : (
+                {action === "REGISTER" && (
                     <div className='input'>
                         <img src={user_icon} alt='' />
                         <input
@@ -208,7 +215,7 @@ function Login() {
                     </div>
                 )}
 
-                {action === "LOGIN" ? null : (
+                {action === "REGISTER" && (
                     <div className='input'>
                         <img src={phone_icon} alt='' />
                         <input
@@ -241,31 +248,21 @@ function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                {action === "REGISTER" ? null : (
+                {action === "LOGIN" && (
                     <div className='forgot-password'>
                         Forgot Password? <span> Click Here</span>
                     </div>
                 )}
 
-                {action === "REGISTER" ? null : (
+                {action === "LOGIN" && (
                     <div className='submit-container'>
-                        <button type="submit" className={"submit gray"} onClick={() => { 
-                                if (action === 'LOGIN') {
-                                    // TODO: Handle Login
-                                    setAction("CONFIRM LOGIN");
-                                }
-                        }}>CONFIRM LOGIN</button>
+                        <button type="button" className={"submit gray"} onClick={handleSubmitLogin}>Log-in</button>
                     </div>
                 )}
 
-                {action === "LOGIN" ? null : (
+                {action === "REGISTER" && (
                 <div className='submit-container'>
-                    <button type="submit" className={"submit gray"} onClick={() => { 
-                            if (action === 'REGISTER') {
-                                // TODO: Handle Registration
-                                setAction("CONFIRM REGISTRATION");
-                            }
-                    }}>CONFIRM REGISTRATION</button>
+                    <button type="submit" className={"submit gray"} onClick={handleSubmitRegistration}>Create Account</button>
                 </div>
                 )}
                 
