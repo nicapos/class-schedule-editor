@@ -6,6 +6,7 @@ import password_icon from '../assets/img/password.png'
 import phone_icon from '../assets/img/phone.png'
 import placeholderImage from '../assets/img/dp.png'
 import { validateEmail, validatePassword, validatePhoneNumber, validateFullName } from '../lib/validation';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [action, setAction] = useState('LOGIN');
@@ -16,6 +17,8 @@ function Login() {
     const [formMode, setFormMode] = useState('LOGIN');
     const [avatarSrc, setAvatarSrc] = useState(null); // For uploading the image to the backend
     const [avatarImg, setAvatarImg] = useState(placeholderImage); // For displaying the image in the front end
+
+    const navigate = useNavigate();
 
     function clearForm() {
         setFullName('');
@@ -126,11 +129,15 @@ function Login() {
             body: JSON.stringify({ email, password }),
         })
             .then(response => {
-                console.log(response);
                 if (response.status !== 200) {
                     throw new Error('Login failed');
                 }
-                // TODO: If login is successful
+
+                navigate("/app");
+            })
+            .catch(error => {
+                console.log(error);
+                // TODO: handle error here
             });
     }
 
