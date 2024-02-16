@@ -132,7 +132,7 @@ function Login() {
             });
 
             if (response.status !== 200) {
-                const response_data = await response.text(); // convert the response to text
+                const response_data = await response.error; // convert the response to text
                 alert(response_data);
                 return;
             }
