@@ -124,15 +124,15 @@ function Login() {
 
     async function loginUser() {
         try {
-            const response = fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch('http://localhost:8080/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
 
             if (response.status !== 200) {
-                const response_data = response.json();
-                throw new Error(response_data.error);
+                const response_data = await response.json();
+                alert(response_data.error);
             }
         } catch (error) {
             console.error(error);
