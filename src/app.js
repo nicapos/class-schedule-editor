@@ -12,27 +12,9 @@ dotenv.config();
 // serve images saved to uploads
 app.use("/uploads", express.static("uploads"));
 
+// handle CORS
 app.set("trust proxy", 1);
-const corsMiddleware = (req, res, next) => {
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-
-  // Allow additional headers if needed
-  // res.setHeader('Access-Control-Allow-Headers', 'Authorization');
-
-  // Handle preflight requests
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-
-  next();
-};
-app.use(corsMiddleware);
+app.use(require("./middleware/cors"));
 
 // parses incoming request bodies to req.body property
 app.use(express.json());
