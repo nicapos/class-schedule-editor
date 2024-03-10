@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
+const swaggerDocs = require("./middleware/docs");
 
 const routes = require("./routes");
 
@@ -41,5 +42,8 @@ app.use("/", routes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT} (available at http://localhost:${PORT}/)`);
+
+  // Show docs
+  swaggerDocs(app, PORT);
 });
