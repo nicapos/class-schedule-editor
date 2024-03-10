@@ -7,6 +7,43 @@ const cryptoJS = require("crypto-js");
 
 const router = Router();
 
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *      summary: Register New User
+ *      description: Registers a new user by email and password
+ *      tags:
+ *          - auth
+ *      parameters:
+ *          - in: body
+ *            description: account registration details
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *      responses:
+ *          '200':
+ *              description: Resource added successfully
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      data:
+ *                        type: object
+ *                        $ref: '#/components/schemas/User'
+ *          '400':
+ *              description: Bad request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/Error'
+ *          '500':
+ *              description: Internal server error
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/Error'
+ */
 router.post("/register", upload.single("avatar"),
   async (req, res) => {
     const { full_name, email, password, phone_number } = req.body;
@@ -69,6 +106,58 @@ router.post("/register", upload.single("avatar"),
   }
 );
 
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *      summary: Sign-in
+ *      description: Log-in to an existing user account using email and password
+ *      tags:
+ *          - auth
+ *      parameters:
+ *          - in: body
+ *            description: account registration details
+ *            schema:
+ *              type: object
+ *              required:
+ *              - email
+ *              - password
+ *              properties:
+ *                email:
+ *                  type: string
+ *                  minLength: 1
+ *                  maxLength: 320
+ *                  example: johndoe@mail.com
+ *                password:
+ *                  type: string
+ *                  minLength: 8
+ *                  maxLength: 320
+ *                  example: P@ssw0rd
+ *      responses:
+ *          '200':
+ *              description: Resource added successfully
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      data:
+ *                        type: object
+ *                        $ref: '#/components/schemas/User'
+ *          '400':
+ *              description: Bad request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/Error'
+ *          '500':
+ *              description: Internal server error
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/Error'
+ */
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -101,11 +190,77 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *      summary: Sign out
+ *      tags:
+ *          - auth
+ *      responses:
+ *          '200':
+ *              description: Logged out successfully
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      message:
+ *                        type: string
+ *                        example: Logged out successfully
+ *          '500':
+ *              description: Internal server error
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/Error'
+ */
 router.post("/logout", async (req, res) => {
   // Clear session data (for cookie-session)
   req.session = null;
 
   return res.status(200).json({ message: "Logged out successfully" });
 });
+
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    User:
+ *      type: object
+ *      required:
+ *        - full_name
+ *        - email
+ *        - password
+ *        - phone_number
+ *      properties:
+ *        full_name:
+ *          type: string
+ *          minLength: 3
+ *          maxLength: 50
+ *          example: John Doe
+ *        email:
+ *          type: string
+ *          minLength: 1
+ *          maxLength: 320
+ *          example: johndoe@mail.com
+ *        password:
+ *          type: string
+ *          minLength: 8
+ *          maxLength: 320
+ *          example: P@ssw0rd
+ *        phone_number:
+ *          type: string
+ *          minLength: 8
+ *          maxLength: 13
+ *          example: 639123456789
+ *        photo_url:
+ *          type: string
+ *          minLength: 4
+ *          maxLength: 2000
+ *          example: https://placehold.co/50x50
+ */
 
 module.exports = router;

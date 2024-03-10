@@ -3,6 +3,7 @@ const User = require("../models/User");
 
 const router = Router();
 
+
 router.get("/", (req, res) => {
   res.send("API is up and running!");
 });
@@ -23,5 +24,21 @@ router.get("/users", async (req, res) => {
   const users = await User.getAll();
   return res.status(200).json({ users });
 });
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Error:
+ *      type: object
+ *      required:
+ *        - error
+ *      properties:
+ *        error:
+ *          type: string
+ *          minLength: 1
+ *          maxLength: 50
+ *          example: Error message goes here
+ */
 
 module.exports = router;
