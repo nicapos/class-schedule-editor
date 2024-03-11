@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /register:
+ * /auth/register:
  *   post:
  *      summary: Register New User
  *      description: Registers a new user by email and password
@@ -109,7 +109,7 @@ router.post("/register", upload.single("avatar"),
 
 /**
  * @swagger
- * /login:
+ * /auth/login:
  *   post:
  *      summary: Sign-in
  *      description: Log-in to an existing user account using email and password
@@ -193,7 +193,7 @@ router.post("/login", async (req, res) => {
 
 /**
  * @swagger
- * /logout:
+ * /auth/logout:
  *   post:
  *      summary: Sign out
  *      tags:

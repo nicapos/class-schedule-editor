@@ -12,7 +12,7 @@ const getOptions = (port) => ({
     },
     servers: [
       {
-        url: `http://localhost:${port}`,
+        url: `http://localhost:${port}/api`,
       },
     ],
   },
