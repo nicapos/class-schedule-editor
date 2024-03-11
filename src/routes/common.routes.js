@@ -4,8 +4,22 @@ const User = require("../models/User");
 const router = Router();
 
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *      summary: Check server status
+ *      responses:
+ *        '200':
+ *          description: API is up and running
+ *          content:
+ *            text/plain:
+ *              schema:
+ *                type: string
+ *                example: API is up and running!
+ */
 router.get("/", (req, res) => {
-  res.send("API is up and running!");
+  res.status(200).send("API is up and running!");
 });
 
 // Outdated route, should be GET /api/user/me. Keep route until frontend is updated.

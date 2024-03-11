@@ -15,13 +15,23 @@ const router = Router();
  *      description: Registers a new user by email and password
  *      tags:
  *          - auth
+ *      consumes:
+ *          - multipart/form-data
  *      parameters:
+ *          - in: formData
+ *            name: avatar
+ *            type: object
+ *            description: The user's avatar (accepts jpeg, jpg, png)
+ *            properties:
+ *              media:
+ *                type: string
+ *                format: byte
  *          - in: body
  *            description: account registration details
  *            schema:
- *              $ref: '#/components/schemas/User'
+ *              $ref: '#/components/schemas/EditableUser'
  *      responses:
- *          '200':
+ *          '201':
  *              description: Resource added successfully
  *              content:
  *                application/json:
@@ -228,7 +238,7 @@ router.post("/logout", async (req, res) => {
  * @swagger
  * components:
  *  schemas:
- *    User:
+ *    EditableUser:
  *      type: object
  *      required:
  *        - full_name
@@ -256,11 +266,20 @@ router.post("/logout", async (req, res) => {
  *          minLength: 8
  *          maxLength: 13
  *          example: 639123456789
- *        photo_url:
- *          type: string
- *          minLength: 4
- *          maxLength: 2000
- *          example: https://placehold.co/50x50
+ *        
+ *    User:
+ *      allOf:
+ *        - $ref: '#/components/schemas/User'
+ *        - type: object
+ *          properties:
+ *            photo_url:
+ *              type: string
+ *              minLength: 4
+ *              maxLength: 2000
+ *              example: https://placehold.co/50x50
+ *            user_type:
+ *              type: string
+ *              example: 'USER'
  */
 
 module.exports = router;
