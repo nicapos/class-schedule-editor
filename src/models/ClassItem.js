@@ -1,9 +1,8 @@
-import Schedule from './Schedule';
-
+const Schedule = require('./Schedule');
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./index');
 
-export const WEEK_DAY_ENUM = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEK_DAY_ENUM = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /**
  * @swagger
@@ -93,14 +92,14 @@ const ClassItem = sequelize.define('ClassItem', {
     allowNull: false,
   },
   scheduleId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(10),
     references: {
-      model: 'class_schedules',
+      model: 'schedules',
       key: 'id',
     },
   },
 }, {
-  tableName: 'class_items',
+  tableName: 'classes',
 });
 
 ClassItem.belongsTo(Schedule, { foreignKey: 'scheduleId' });

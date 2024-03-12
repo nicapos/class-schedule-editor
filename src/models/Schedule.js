@@ -1,5 +1,7 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./index');
+const User = require('./User');
+const { Sequelize, DataTypes } = require('sequelize');
+const { sequelize } = require('./index');
+const nanoid = require('../utils/id');
 
 /**
  * @swagger
@@ -41,9 +43,9 @@ const sequelize = require('./index');
  */
 const Schedule = sequelize.define('ClassSchedule', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(10),
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: () => nanoid(),
     allowNull: false,
   },
   name: {
@@ -51,14 +53,14 @@ const Schedule = sequelize.define('ClassSchedule', {
     allowNull: true,
   },
   userId: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.UUID,
     references: {
       model: 'users',
       key: 'id',
     },
   },
 }, {
-  table: "class_schedules"
+  tableName: 'schedules'
 });
 
 Schedule.belongsTo(User, { foreignKey: 'userId' });
