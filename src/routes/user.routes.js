@@ -22,11 +22,11 @@ const router = Router();
  *                    type: object
  *                    $ref: '#/components/schemas/User'
  *        '500':
- *          description: Internal server error
- *          content:
- *            application/json:
- *              schema:
- *              $ref: '#/components/schemas/Error'
+ *            description: Internal server error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  $ref: '#/components/schemas/Error'
  */
 router.get("/me", async (req, res) => {
   const email = req.session.userEmail;
@@ -54,21 +54,21 @@ router.get("/me", async (req, res) => {
  *              schema:
  *                type: object
  *                properties:
- *                  users:
+ *                  data:
  *                    type: array
  *                    items:
  *                      $ref: '#/components/schemas/User'
  *        '500':
- *          description: Internal server error
- *          content:
- *            application/json:
- *              schema:
- *              $ref: '#/components/schemas/Error'
+ *            description: Internal server error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  $ref: '#/components/schemas/Error'
  */
 router.get("/all", async (req, res) => {
   // TODO: Check if user is admin
-  const users = await User.getAll();
-  return res.status(200).json({ users });
+  const users = await User.findAll();
+  return res.status(200).json({ data: users });
 });
 
 module.exports = router;

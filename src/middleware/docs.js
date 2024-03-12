@@ -16,7 +16,7 @@ const getOptions = (port) => ({
       },
     ],
   },
-  apis: ["./src/routes/*.js"],
+  apis: ["./src/routes/*.js", "./src/models/*.js"],
 });
 
 function swaggerDocs(app, port) {

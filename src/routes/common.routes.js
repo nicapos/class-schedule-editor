@@ -35,7 +35,7 @@ router.get("/me", async (req, res) => {
 // Outdated route, should be GET /api/user/all. Keep route until frontend is updated.
 router.get("/users", async (req, res) => {
   // TODO: Check if user is admin
-  const users = await User.getAll();
+  const users = await User.findAll();
   return res.status(200).json({ users });
 });
 
