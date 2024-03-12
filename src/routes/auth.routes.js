@@ -57,7 +57,7 @@ const router = Router();
  */
 router.post("/register", upload.single("avatar"),
   async (req, res) => {
-    const { full_name, email, password, phone_number } = req.body;
+    const { fullName, email, password, phoneNumber } = req.body;
 
     function validateField(fieldName, validatorFn) {
       const value = req.body[fieldName];
@@ -88,10 +88,10 @@ router.post("/register", upload.single("avatar"),
         .status(400)
         .json({ error: "Invalid file type (accepts jpeg, jpg, png)" });
 
-    validateField("full_name", isValid("full_name", full_name));
+    validateField("fullName", isValid("fullName", fullName));
     validateField("email", isValid("email", email));
     validateField("password", isValid("password", password));
-    validateField("phone_number", isValid("phone_number", phone_number));
+    validateField("phoneNumber", isValid("phoneNumber", phoneNumber));
 
     //salting try
     const salt = crypto.randomBytes(16).toString('hex');
@@ -106,13 +106,14 @@ router.post("/register", upload.single("avatar"),
       : null;
 
     try {
-      const user = await User.create(
-        full_name,
-        email,
-        hashedPassword,
-        phone_number,
-        filename
-      );
+      const user = await User.create({
+        fullName: fullName,
+        email: email,
+        password: hashedPassword,
+        phoneNumber: phoneNumber,
+        filename: filename,
+      });
+
       return res.status(201).json({ data: user });
     } catch (error) {
       return res.status(400).json({ error: error.message });
@@ -239,53 +240,5 @@ router.post("/logout", async (req, res) => {
   return res.status(200).json({ message: "Logged out successfully" });
 });
 
-
-/**
- * @swagger
- * components:
- *  schemas:
- *    EditableUser:
- *      type: object
- *      required:
- *        - full_name
- *        - email
- *        - password
- *        - phone_number
- *      properties:
- *        full_name:
- *          type: string
- *          minLength: 3
- *          maxLength: 50
- *          example: John Doe
- *        email:
- *          type: string
- *          minLength: 1
- *          maxLength: 320
- *          example: johndoe@mail.com
- *        password:
- *          type: string
- *          minLength: 8
- *          maxLength: 320
- *          example: P@ssw0rd
- *        phone_number:
- *          type: string
- *          minLength: 8
- *          maxLength: 13
- *          example: 639123456789
- *        
- *    User:
- *      allOf:
- *        - $ref: '#/components/schemas/EditableUser'
- *        - type: object
- *          properties:
- *            photo_url:
- *              type: string
- *              minLength: 4
- *              maxLength: 2000
- *              example: https://placehold.co/50x50
- *            user_type:
- *              type: string
- *              example: 'USER'
- */
 
 module.exports = router;

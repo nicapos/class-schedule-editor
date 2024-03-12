@@ -40,10 +40,26 @@ app.use(
 // Register routes
 app.use("/", routes);
 
+// Setup DB
+const db = require("./models");
+
+// Check if --reset flag is present in the command-line arguments
+const hasResetFlag = process.argv.indexOf('--reset') !== -1;
+
+db.sequelize.sync({ force: hasResetFlag })
+  .then(() => console.log("Synced db."))
+  .catch((err) => console.log("Failed to sync db: " + err.message));
+
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} (available at http://localhost:${PORT}/)`);
 
   // Show docs
   swaggerDocs(app, PORT);
+
+  // Check DB connection
+  db.sequelize.authenticate()
+    .then(() => console.log('Connection has been established successfully.'))
+    .catch((error) => console.error('Unable to connect to the database:', error));
 });
