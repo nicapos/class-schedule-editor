@@ -2,13 +2,14 @@
   "name": "class-schedule-editor",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node server.js",
-    "dev:server": "nodemon server.js",
+    "dev:server": "nodemon src/app.js",
     "dev:client": "npm start --prefix ./client",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "build": "cd client && npm run build"
+    "build:server": "npx tsc",
+    "build:client": "cd client && npm run build",
+    "start:server": "node dist/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +24,8 @@
     "js-cookie": "^3.0.5",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.0.3",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   }
 }
