@@ -53,9 +53,10 @@ const { sequelize } = require('./index');
  */
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    allowNull: false,
+    primaryKey: true
   },
   fullName: {
     type: DataTypes.STRING(255),
