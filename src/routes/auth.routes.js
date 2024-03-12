@@ -146,7 +146,7 @@ router.post("/register", upload.single("avatar"),
  *                  example: P@ssw0rd
  *      responses:
  *          '200':
- *              description: Resource added successfully
+ *              description: Found matching credentials, logged-in successfully
  *              content:
  *                application/json:
  *                  schema:
@@ -269,7 +269,7 @@ router.post("/logout", async (req, res) => {
  *        
  *    User:
  *      allOf:
- *        - $ref: '#/components/schemas/User'
+ *        - $ref: '#/components/schemas/EditableUser'
  *        - type: object
  *          properties:
  *            photo_url:
