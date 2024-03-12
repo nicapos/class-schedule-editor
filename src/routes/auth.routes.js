@@ -4,6 +4,7 @@ const { isValid } = require("../utils/validation");
 
 const { Router } = require("express");
 const cryptoJS = require("crypto-js");
+const crypto = require('crypto');
 
 const router = Router();
 
@@ -92,9 +93,12 @@ router.post("/register", upload.single("avatar"),
     validateField("password", isValid("password", password));
     validateField("phone_number", isValid("phone_number", phone_number));
 
+    //salting try
+    const salt = crypto.randomBytes(16).toString('hex');
+    const saltedPassword = password + salt;
     //insert hashing password here
     const hashedPassword = cryptoJS
-      .SHA256(password)
+      .SHA256(saltedPassword)
       .toString(cryptoJS.enc.Base64);
 
     const filename = req.file
@@ -179,7 +183,9 @@ router.post("/login", async (req, res) => {
       .status(400)
       .json({ error: "Missing required field 'password'" });
 
-  const hashedPassword = cryptoJS.SHA256(password).toString(cryptoJS.enc.Base64);
+  const salt = crypto.randomBytes(16).toString('hex');
+  const saltedPassword = password + salt;
+  const hashedPassword = cryptoJS.SHA256(saltedPassword).toString(cryptoJS.enc.Base64);
 
   try {
     const user = await User.findByEmailAndPassword(email, hashedPassword);
