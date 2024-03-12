@@ -7,39 +7,27 @@ const nanoid = require('../utils/id');
  * @swagger
  * components:
  *   schemas:
- *     ClassItem:
+ *     EditableSchedule:
  *       type: object
  *       properties:
- *         id:
+ *         name:
+ *           type: string
+ *           description: The name of the schedule.
+ *           example: "My Schedule"
+ *         userId:
  *           type: integer
- *           description: The ID of the class item.
- *         className:
- *           type: string
- *           description: The name of the class.
- *         day:
- *           type: string
- *           enum: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
- *           description: "The day of the class."
- *         startTime:
- *           type: string
- *           description: "The start time of the class (format: HH:mm)."
- *         endTime:
- *           type: string
- *           description: "The end time of the class (format: HH:mm)."
- *         location:
- *           type: string
- *           description: The location of the class.
- *         scheduleId:
- *           type: integer
- *           description: The ID of the associated schedule.
- *       example:
- *         id: 1
- *         className: "Math 101"
- *         day: "Mon"
- *         startTime: "09:00"
- *         endTime: "10:30"
- *         location: "Room 101"
- *         scheduleId: 1
+ *           description: The id of the user associated with the schedule.
+ *           example: 123
+ * 
+ *     Schedule:
+ *       allOf:
+ *         - $ref: '#/components/schemas/EditableSchedule'
+ *         - type: object
+ *           properties:
+ *             id:
+ *               type: string
+ *               description: The ID of the class item.
+ *               example: 4f90d13a42
  */
 const Schedule = sequelize.define('ClassSchedule', {
   id: {

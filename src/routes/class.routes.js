@@ -14,7 +14,7 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/ClassItem'
+ *             $ref: '#/components/schemas/EditableClassItem'
  *     responses:
  *       '201':
  *         description: Class item created successfully
@@ -84,7 +84,7 @@ router.get('/class', async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/ClassItem'
+ *             $ref: '#/components/schemas/EditableClassItem'
  *     responses:
  *       '200':
  *         description: Class item updated successfully

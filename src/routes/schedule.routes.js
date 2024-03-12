@@ -14,7 +14,7 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Schedule'
+ *             $ref: '#/components/schemas/EditableSchedule'
  *     responses:
  *       '201':
  *         description: Schedule created successfully
@@ -66,6 +66,51 @@ router.get('/schedules', async (req, res) => {
 /**
  * @swagger
  * /schedules/{id}:
+ *   get:
+ *     summary: Get a schedule by id
+ *     tags: [schedule]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: id of the schedule to retrieve
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "4f90d13a42"
+ *     responses:
+ *       '200':
+ *         description: Schedule retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Schedule'
+ *       '404':
+ *         description: Schedule not found
+ *       '500':
+ *         description: Internal Server Error
+ */
+router.get('/schedules/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const schedule = await Schedule.findByPk(id);
+
+    if (!schedule) {
+      return res.status(404).json({ error: 'Schedule not found' });
+    }
+
+    res.json(schedule);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+module.exports = router;
+
+/**
+ * @swagger
+ * /schedules/{id}:
  *   put:
  *     summary: Update schedule by id
  *     tags: [schedule]
@@ -81,7 +126,7 @@ router.get('/schedules', async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Schedule'
+ *             $ref: '#/components/schemas/EditableSchedule'
  *     responses:
  *       '200':
  *         description: Schedule updated successfully
