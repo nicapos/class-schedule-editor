@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const upload = require("../middleware/multer");
-const { isValid } = require("../utils/validation");
+const { getValidator } = require("../utils/validation");
+const uploadFile = require("../utils/uploads");
 
 const { Router } = require("express");
 const cryptoJS = require("crypto-js");
@@ -88,10 +89,10 @@ router.post("/register", upload.single("avatar"),
         .status(400)
         .json({ error: "Invalid file type (accepts jpeg, jpg, png)" });
 
-    validateField("fullName", isValid("fullName", fullName));
-    validateField("email", isValid("email", email));
-    validateField("password", isValid("password", password));
-    validateField("phoneNumber", isValid("phoneNumber", phoneNumber));
+    validateField("fullName", getValidator("fullName"));
+    validateField("email", getValidator("email"));
+    validateField("password", getValidator("password"));
+    validateField("phoneNumber", getValidator("phoneNumber"));
 
     //salting try
     const salt = crypto.randomBytes(16).toString('hex');
@@ -101,9 +102,9 @@ router.post("/register", upload.single("avatar"),
       .SHA256(saltedPassword)
       .toString(cryptoJS.enc.Base64);
 
-    const filename = req.file
-      ? `http://localhost:8080/uploads/${encodeURIComponent(req.file.filename)}`
-      : null;
+    // Handle uploaded avatar
+    const uploadedAvatarURL = await uploadFile(req.file.buffer, req.file.originalname);
+
 
     try {
       const user = await User.create({
@@ -111,7 +112,8 @@ router.post("/register", upload.single("avatar"),
         email: email,
         password: hashedPassword,
         phoneNumber: phoneNumber,
-        filename: filename,
+        photoUrl: uploadedAvatarURL,
+        userType: 'USER'
       });
 
       return res.status(201).json({ data: user });

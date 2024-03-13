@@ -7,11 +7,11 @@ const regex = {
   fullName: /[a-zA-Z ]{3,}/,
 };
 
-function isValid(key, value) {
+function getValidator(key) {
   if (!regex.hasOwnProperty(key))
     throw Error(`Key '${key}' does not exist for validator`);
 
-  return regex[key].test(value);
+  return (value) => regex[key].test(value);
 }
 
 function checkFileType(file, callback) {
@@ -23,4 +23,4 @@ function checkFileType(file, callback) {
   return callback(null, false);
 }
 
-module.exports = { isValid, checkFileType };
+module.exports = { getValidator, checkFileType };

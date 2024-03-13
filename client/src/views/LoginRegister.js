@@ -62,10 +62,10 @@ function Login() {
     // TODO: Connect to the database register user
     function registerUser() {
         const formData  = new FormData();
-        formData.append("full_name", fullName);
+        formData.append("fullName", fullName);
         formData.append("email", email);
         formData.append("password", password);
-        formData.append("phone_number", phoneNumber);
+        formData.append("phoneNumber", phoneNumber);
         formData.append("avatar", avatarSrc);
 
         fetch('http://localhost:8080/api/auth/register', { method: 'POST', body: formData })
@@ -78,12 +78,12 @@ function Login() {
                 const data = response.json();
                 console.log(data);
 
-                alert('Registration successful! Please proceed to login.');
+                // alert('Registration successful! Please proceed to login.');
                 setAction('LOGIN');
             })
             .catch(error => {
-                console.error('Registration error:', error.message);
-                alert('Registration failed. Please try again.');
+                console.error(error);
+                // alert('Registration failed. Please try again.');
             });
     }
 
@@ -163,11 +163,11 @@ function Login() {
         if (!validateRegistration()) return;
     
         registerUser();
-        clearForm();
+        // clearForm();
 
         // Switch back to login mode
-        alert('Registration successful!');
-        setAction('LOGIN');
+        // alert('Registration successful!');
+        // setAction('LOGIN');
     }
     
     function handleSubmit(e) {
@@ -217,7 +217,7 @@ function Login() {
                         <img src={user_icon} alt='' />
                         <input
                             type='text'
-                            name='full_name'
+                            name='fullName'
                             placeholder='Full Name'
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
@@ -230,7 +230,7 @@ function Login() {
                         <img src={phone_icon} alt='' />
                         <input
                             type='tel'
-                            name='phone_number'
+                            name='phoneNumber'
                             placeholder='Phone Number'
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}

@@ -14,7 +14,7 @@ export default function ScheduleEditorPage() {
   const navigate = useNavigate();
 
   function getCurrentUser() {
-    fetch("http://localhost:8080/api/me", {
+    fetch("http://localhost:8080/api/user/me", {
       method: "GET",
       headers: {
         'Accept': 'application/json',

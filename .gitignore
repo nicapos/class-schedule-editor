@@ -5,4 +5,7 @@
 uploads/*
 !uploads/.gitkeep
 
+# Ignore file with GCP service account details
+**/config/service-account.json
+
 .env
