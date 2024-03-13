@@ -1,19 +1,16 @@
-export function validateEmail(email) {
-  const validEmailRegex = /(^\w?([,.-]\w)?)*@[\w*.]+\w{2,}$/;
-  return validEmailRegex.test(email);
-}
+const regexFieldNames = {
+  email: /(^\w?([,.-]\w)?)*@[\w*.]+\w{2,}$/,
+  password: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/,
+  phoneNumber: /^\d{7,13}$/,
+  fullName: /[a-zA-Z ]{3,}/,
+};
 
-export function validatePassword(password){
-  const validPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
-  return validPasswordRegex.test(password);
-}
-
-export function validatePhoneNumber(phoneNumber){
-  const validPhoneNumRegex = /^\d{7,13}$/;
-  return validPhoneNumRegex.test(phoneNumber);
-}
-
-export function validateFullName(fullName){
-  const validFullNameRegex = /[a-zA-Z ]{3,}/;
-  return validFullNameRegex.test(fullName);
+/**
+ * Validates a field value based on the regex above
+ * @param {string} fieldName
+ * @param {string} value
+ * @returns
+ */
+export function validate(fieldName, value) {
+  return regexFieldNames[fieldName].test(value);
 }

@@ -191,7 +191,9 @@ router.post("/login", async (req, res) => {
   const hashedPassword = cryptoJS.SHA256(saltedPassword).toString(cryptoJS.enc.Base64);
 
   try {
-    const user = await User.findByEmailAndPassword(email, hashedPassword);
+    const user = await User.findOne({
+      where: { email: email, password: hashedPassword },
+    });
 
     if (user) {
       req.session.userId = user.id;
