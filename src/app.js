@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const swaggerDocs = require("./middleware/docs");
 const errorHandler = require('./middleware/errorHandler');
+const fs = require('fs');
+const https = require('https');
 
 const routes = require("./routes");
 
@@ -45,6 +47,14 @@ app.use("/", routes);
 // Setup DB
 const db = require("./models");
 
+// Start HTTPS server
+const options = {
+  key: fs.readFileSync(__dirname + '/certs/key.pem'),
+  cert: fs.readFileSync(__dirname + '/certs/cert.pem')
+};
+
+const sslServer = https.createServer(options, app);
+
 // Check if --reset flag is present in the command-line arguments
 const hasResetFlag = process.argv.indexOf('--reset') !== -1;
 
@@ -54,8 +64,8 @@ db.sequelize.sync({ force: hasResetFlag })
 
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} (available at http://localhost:${PORT}/)`);
+sslServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT} (available at https://localhost:${PORT}/)`);
 
   // Show docs
   swaggerDocs(app, PORT);
