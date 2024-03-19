@@ -25,7 +25,7 @@ const router = Router();
  *       '500':
  *         description: Internal Server Error
  */
-router.post('/class', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     // Using the ClassItem model to parse and validate req.body
     const newClassItem = await ClassItem.create(req.body);
@@ -56,7 +56,7 @@ router.post('/class', async (req, res) => {
  *       '500':
  *         description: Internal Server Error
  */
-router.get('/class', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const classItems = await ClassItem.findAll();
     res.json(classItems);
@@ -97,7 +97,7 @@ router.get('/class', async (req, res) => {
  *       '500':
  *         description: Internal Server Error
  */
-router.put('/class/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const classItem = await ClassItem.findByPk(id);
@@ -133,7 +133,7 @@ router.put('/class/:id', async (req, res) => {
  *       '500':
  *         description: Internal Server Error
  */
-router.delete('/class/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const classItem = await ClassItem.findByPk(id);
