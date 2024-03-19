@@ -40,7 +40,7 @@ function AdminPage() {
   };
 
   const renderPage = () => (
-    <div className="container">
+    <div className="container" id="admin-page">
       <h1>Admin Panel</h1>
       <table>
         <thead>

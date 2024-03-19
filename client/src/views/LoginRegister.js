@@ -182,7 +182,7 @@ function Login() {
   }
 
   return (
-    <div className="container">
+    <div className="container" id="auth-page">
       <div className="header">
         <div className="text">{formMode}</div>
         <div className="underline" />
