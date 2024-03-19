@@ -5,7 +5,7 @@ const router = Router();
 
 /**
  * @swagger
- * /schedules:
+ * /schedule:
  *   post:
  *     summary: Create new schedule
  *     tags: [schedule]
@@ -25,7 +25,7 @@ const router = Router();
  *       '500':
  *         description: Internal Server Error
  */
-router.post('/schedules', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const schedule = await Schedule.create(req.body);
     res.status(201).json(schedule);
@@ -37,7 +37,7 @@ router.post('/schedules', async (req, res) => {
 
 /**
  * @swagger
- * /schedules:
+ * /schedule:
  *   get:
  *     summary: Get all schedules
  *     tags: [schedule]
@@ -53,10 +53,14 @@ router.post('/schedules', async (req, res) => {
  *       '500':
  *         description: Internal Server Error
  */
-router.get('/schedules', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const schedules = await Schedule.findAll();
-    res.json(schedules);
+    const { userId } = req.params;
+
+    const schedules = await Schedule.findAll({
+      where: { userId }
+    });
+    res.status(200).json(schedules);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -65,7 +69,7 @@ router.get('/schedules', async (req, res) => {
 
 /**
  * @swagger
- * /schedules/{id}:
+ * /schedule/{id}:
  *   get:
  *     summary: Get a schedule by id
  *     tags: [schedule]
@@ -89,7 +93,7 @@ router.get('/schedules', async (req, res) => {
  *       '500':
  *         description: Internal Server Error
  */
-router.get('/schedules/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -110,7 +114,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /schedules/{id}:
+ * /schedule/{id}:
  *   put:
  *     summary: Update schedule by id
  *     tags: [schedule]
@@ -139,7 +143,7 @@ module.exports = router;
  *       '500':
  *         description: Internal Server Error
  */
-router.put('/schedules/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const schedule = await Schedule.findByPk(id);
@@ -156,7 +160,7 @@ router.put('/schedules/:id', async (req, res) => {
 
 /**
  * @swagger
- * /schedules/{id}:
+ * /schedule/{id}:
  *   delete:
  *     summary: Delete schedule by id
  *     tags: [schedule]
@@ -175,7 +179,7 @@ router.put('/schedules/:id', async (req, res) => {
  *       '500':
  *         description: Internal Server Error
  */
-router.delete('/schedules/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const schedule = await Schedule.findByPk(id);

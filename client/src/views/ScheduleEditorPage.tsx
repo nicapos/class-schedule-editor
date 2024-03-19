@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CalendarPreview from "../components/CalendarPreview";
 import { Loader2 as Spinner } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
