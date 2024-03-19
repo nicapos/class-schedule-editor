@@ -11,7 +11,7 @@ const UserService = {
     });
 
     const data = await response.json();
-    return data as User;
+    return data.user as User;
   },
 };
 
