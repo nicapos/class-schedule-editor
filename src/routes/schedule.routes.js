@@ -1,7 +1,11 @@
 const Schedule = require('../models/Schedule');
+const ClassItem = require('../models/ClassItem');
 const { Router } = require("express");
+const { timeToDecimal } = require('../utils/time');
 
 const router = Router();
+
+const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /**
  * @swagger
@@ -95,7 +99,8 @@ router.get('/', async (req, res) => {
  *         description: Internal Server Error
  */
 router.get('/:id', async (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
+  const { includeClasses } = req.query;
 
   try {
     const schedule = await Schedule.findByPk(id);
@@ -104,7 +109,26 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Schedule not found' });
     }
 
-    res.json(schedule);
+    if (!includeClasses)
+      return res.status(200).json(schedule);
+
+    const classesQuery = await ClassItem.findAll({
+      where: { scheduleId: schedule.dataValues.id }
+    });
+    const classes = classesQuery.map(({ dataValues }) => ({
+      ...dataValues,
+      title: dataValues.className,
+      startTime: timeToDecimal(dataValues.startTime),
+      endTime: timeToDecimal(dataValues.endTime),
+      description: dataValues.location ?? ''
+    })) ?? [];
+
+    const scheduleByDay = daysOfWeek.map((day) => ({
+      name: day,
+      events: classes.filter(cl => cl.day === day),
+    }));
+
+    return res.status(200).json(scheduleByDay);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

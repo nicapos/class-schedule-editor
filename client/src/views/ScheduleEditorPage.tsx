@@ -7,6 +7,7 @@ import React from "react";
 import Modal from "../components/Modal";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import useSchedule from "src/hooks/useSchedule";
+import { mockSchedule } from "../definitions/schedule";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
@@ -103,7 +104,7 @@ export default function ScheduleEditorPage() {
       
       {/* SCHEDULE */}
       <div className="w-full">
-        <CalendarPreview />
+        <CalendarPreview schedule={mockSchedule} />
       </div>
 
       {!isLoading && <div className="absolute top-2 right-2 flex gap-2">

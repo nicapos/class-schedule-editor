@@ -2,7 +2,6 @@ import { DaySchedule, ScheduleView, createTheme } from "react-schedule-view";
 import { ClassEvent } from "../types/calendar";
 import { hexToRGBA } from "../lib/colors";
 import { formatTime } from "../lib/time";
-import { mockSchedule } from "../definitions/schedule";
 
 type TileComponentProps = { event: ClassEvent; tileColor?: string };
 
@@ -24,9 +23,10 @@ const CalendarTile: React.FC<TileComponentProps> = ({
   </div>
 );
 
-function CalendarPreview() {
-  const schedule: DaySchedule<ClassEvent>[] = mockSchedule;
+const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const emptyDaySchedule = daysOfWeek.map((day) => ({ name: day, events: [] }));
 
+function CalendarPreview({ schedule }: { schedule?: DaySchedule<ClassEvent>[] }) {
   const theme = createTheme("apple", {
     style: {
       dayLabels: {
@@ -41,7 +41,7 @@ function CalendarPreview() {
 
   return (
     <ScheduleView
-      daySchedules={schedule}
+      daySchedules={schedule ?? emptyDaySchedule}
       viewStartTime={7}
       viewEndTime={22}
       theme={theme}
