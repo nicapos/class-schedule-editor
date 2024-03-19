@@ -11,3 +11,11 @@ export interface User {
 }
 
 export type EditableUser = Omit<User, "id" | "userType">;
+
+export interface Schedule {
+  id: string;
+  name: string | null;
+  userId: string;
+}
+
+export type EditableSchedule = Omit<Schedule, "id">;

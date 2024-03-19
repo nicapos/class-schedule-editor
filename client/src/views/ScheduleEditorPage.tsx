@@ -6,12 +6,16 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 import Modal from "../components/Modal";
 import useCurrentUser from "src/hooks/useCurrentUser";
+import useSchedule from "src/hooks/useSchedule";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
 
 export default function ScheduleEditorPage() {
-  const { isLoading, user } = useCurrentUser();
+  const { isLoading: isUserLoading, user } = useCurrentUser();
+  const { isLoading: isScheduleLoading, schedule } = useSchedule(user?.id);
+
+  const isLoading = isUserLoading || isScheduleLoading;
 
   // Modals
   const [isAddClassModalOpen, setAddClassModalOpen] = useState<boolean>(false);
@@ -231,5 +235,5 @@ export default function ScheduleEditorPage() {
     </div>
   );
 
-  return isLoading ? renderLoading() : renderPage();
+  return isUserLoading && isScheduleLoading ? renderLoading() : renderPage();
 }

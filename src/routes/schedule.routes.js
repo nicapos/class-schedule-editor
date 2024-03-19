@@ -27,8 +27,10 @@ const router = Router();
  */
 router.post('/', async (req, res) => {
   try {
-    const schedule = await Schedule.create(req.body);
-    res.status(201).json(schedule);
+    const { userId, name } = req.body;
+
+    const schedule = await Schedule.create({ userId, name });
+    res.status(201).json(schedule.dataValues);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -55,8 +57,7 @@ router.post('/', async (req, res) => {
  */
 router.get('/', async (req, res) => {
   try {
-    const { userId } = req.params;
-
+    const { userId } = req.query;
     const schedules = await Schedule.findAll({
       where: { userId }
     });
@@ -94,7 +95,7 @@ router.get('/', async (req, res) => {
  *         description: Internal Server Error
  */
 router.get('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
 
   try {
     const schedule = await Schedule.findByPk(id);
@@ -144,7 +145,7 @@ module.exports = router;
  *         description: Internal Server Error
  */
 router.put('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
   try {
     const schedule = await Schedule.findByPk(id);
     if (!schedule) {
@@ -180,7 +181,7 @@ router.put('/:id', async (req, res) => {
  *         description: Internal Server Error
  */
 router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
   try {
     const schedule = await Schedule.findByPk(id);
     if (!schedule) {
