@@ -154,23 +154,54 @@ export default function ScheduleEditorPage() {
       {/* Add Class Modal */}
       <Modal isOpen={isAddClassModalOpen} onClose={() =>setAddClassModalOpen(false)}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '24px', fontWeight: 'bold', color: '#333' }}>ADD CLASS</h1>
+        <h1 style={{ textAlign: 'center', marginBottom: '3px', fontSize: '24px', fontWeight: 'bold', color: '#333' }}>ADD CLASS</h1>
           <form style={{ width: '100%' }}>
-            <div style={{ marginBottom: '10px', width: '100%' }}>
-              <label htmlFor="className">Class Name</label>
+            
+            <div style={{ marginBottom: '3px', width: '100%' }}>
+            <label style={{ fontWeight: 'bold' }} htmlFor="className">Class Name</label>
               <input type="text" id="className" style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
             </div>
-            <div style={{ marginBottom: '10px', width: '100%' }}>
-              <label htmlFor="classTime">Class Time</label>
-              <input type="text" id="classTime" style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+
+            <div style={{ marginBottom: '3px', width: '100%' }}>
+              <label style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>Day</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '5px', justifyItems: 'center' }}>
+                <label style={{ marginBottom: '2px' }}>
+                    <input type="checkbox" value="Mon" /> Monday
+                </label>
+                <label style={{ marginBottom: '2px' }}>
+                    <input type="checkbox" value="Tue" /> Tuesday
+                </label>
+                <label style={{ marginBottom: '2px' }}>
+                    <input type="checkbox" value="Wed" /> Wednesday
+                </label>
+                <label style={{ marginBottom: '2px' }}>
+                    <input type="checkbox" value="Thu" /> Thursday
+                </label>
+                <label style={{ marginBottom: '2px' }}>
+                    <input type="checkbox" value="Fri" /> Friday
+                </label>
+                <label style={{ marginBottom: '2px' }}>
+                    <input type="checkbox" value="Sat" /> Saturday
+                </label>
+                <label style={{ marginBottom: '2px' }}>
+                    <input type="checkbox" value="Sun" /> Sunday
+                </label>
+              </div>
+          </div>
+
+            <div style={{ marginBottom: '3px', width: '100%' }}>
+              <label style={{ fontWeight: 'bold' }} htmlFor="classStartTime">Class Start Time</label>
+              <input type="text" id="classStartTime" style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
             </div>
-            <div style={{ marginBottom: '10px', width: '100%' }}>
-              <label htmlFor="classProfName">Professor Name</label>
-              <input type="text" id="classProfName" style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+
+            <div style={{ marginBottom: '3px', width: '100%' }}>
+              <label style={{ fontWeight: 'bold' }} htmlFor="classEndTime">Class End Time</label>
+              <input type="text" id="classEndTime" style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
             </div>
-            <div style={{ marginBottom: '10px', width: '100%' }}>
-              <label htmlFor="classLocation">Class Location</label>
-              <input type="text" id="classLocation" style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+
+            <div style={{ marginBottom: '3px', width: '100%' }}>
+              <label style={{ fontWeight: 'bold' }} htmlFor="classDescription">Class Description</label>
+              <input type="text" id="classDescription" style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
             </div>
             
             <button
