@@ -7,6 +7,7 @@ import AddClassModal from "./AddClassModal";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import useSchedule from "src/hooks/useSchedule";
 import { Toaster } from "src/components/ui/sonner";
+import { Button } from "src/components/ui/button";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
@@ -34,7 +35,9 @@ export default function ScheduleEditorPage() {
 
       {/* HEADER */}
       <header className="text-center flex-0">
-        <h2 className="lg:text-2xl text-lg font-bold mb-1">Class Schedule Maker</h2>
+        <h2 className="lg:text-2xl text-lg font-bold mb-1">
+          Class Schedule Maker
+        </h2>
         <p className="text-sm">
           Craft your class schedule easily with our intuitive platform.
         </p>
@@ -50,19 +53,13 @@ export default function ScheduleEditorPage() {
       {!isLoading && (
         <div className="absolute top-2 right-2 flex gap-2">
           {user?.userType === "ADMIN" && (
-            <button
-              className="bg-gray-500 rounded-md text-sm"
-              onClick={() => navigate("/admin")}
-            >
+            <Button variant="outline" onClick={() => navigate("/admin")}>
               Admin
-            </button>
+            </Button>
           )}
-          <button
-            className="bg-gray-500 rounded-md text-sm"
-            onClick={handleLogout}
-          >
+          <Button variant="secondary" onClick={handleLogout}>
             Log out
-          </button>
+          </Button>
         </div>
       )}
 
