@@ -1,0 +1,25 @@
+name: Update Issue with Last Commit
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  update-issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Last Commit
+        run: |
+          LAST_COMMIT=$(git log -1 --pretty=format:"%H")
+          echo "::set-output name=last_commit::$LAST_COMMIT"
+
+      - name: Create or Update Comment
+        uses: peter-evans/create-or-update-comment@v4.0.0
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: "Last Commit in Main: [$LAST_COMMIT](https://github.com/${{ github.repository_owner }}/${{ github.repository }}/commit/$LAST_COMMIT)"
+          token: ${{ secrets.GITHUB_TOKEN }}
