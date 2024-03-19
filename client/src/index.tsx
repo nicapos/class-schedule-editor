@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./assets/css/index.css";
 import App from "./views/App";
 import reportWebVitals from "./lib/reportWebVitals";
+import ScheduleEditor from "./views/ScheduleEditor";
 import ScheduleEditorPage from "./views/ScheduleEditorPage";
 import LoginRegister from "./views/LoginRegister";
 import AdminPage from "./views/AdminPage";
@@ -17,7 +18,8 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/app" element={<ScheduleEditorPage />} />
+        <Route path="/app" element={<ScheduleEditor />} />
+        <Route path="/app-old" element={<ScheduleEditorPage />} />
         <Route path="/login" element={<LoginRegister />} />
         <Route path="/admin" element={<AdminPage />} />
       </Routes>

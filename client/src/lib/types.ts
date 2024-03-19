@@ -19,3 +19,18 @@ export interface Schedule {
 }
 
 export type EditableSchedule = Omit<Schedule, "id">;
+
+export type Day = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat';
+
+export interface ClassItem {
+  id: number;
+  className: string;
+  day: Day;
+  startTime: string;
+  endTime: string;
+  location: string;
+  scheduleId: string;
+};
+
+export type EditableClassItem = Omit<ClassItem, "id">;
+
