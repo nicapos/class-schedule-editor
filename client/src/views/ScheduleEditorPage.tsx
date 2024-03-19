@@ -1,60 +1,37 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import CalendarPreview from "../components/CalendarPreview";
 import { Loader2 as Spinner } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Api, { Schedule } from "../lib/api";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
 
 export default function ScheduleEditorPage() {
-  const [isLoading, setLoadingState] = useState<boolean>(true);
-  const [name, setName] = useState<string>();
-  const [photoURL, setPhotoURL] = useState<string>(placeholderAvatar);
-  const [isAdmin, setIsAdmin] = useState<boolean>();
+  const { isLoading, user } = useCurrentUser();
 
   const navigate = useNavigate();
 
-  function getCurrentUser() {
-    fetch("http://localhost:8080/api/user/me", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!data.user) {
-          // No logged in user. Redirect back to login
-          navigate("/login");
-          return;
-        }
-
-        setName(data.user.fullName);
-        setIsAdmin(data.user.userType === "ADMIN");
-        if (data.user.photoUrl) {
-          setPhotoURL(data.user.photoUrl);
-        }
-
-        setLoadingState(false);
-      });
-  }
-
   function handleLogout() {
-    fetch("http://localhost:8080/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-
-    navigate("/login");
+    Api.signOut().then(() => navigate("/login"));
   }
 
-  function handleAdmin() {
-    navigate("/admin");
-  }
-
-  // Fetch current user on enter page
-  useEffect(getCurrentUser, []);
+  useEffect(() => {
+    // Get first item of user schedules
+    if (user) {
+      Api.getAllSchedules(user.id).then((schedules: Schedule[]) => {
+        console.log("schedulecount:" + schedules.length);
+        if (schedules.length === 0) {
+          // If no user schedules, create default schedule
+          Api.createSchedule({
+            name: "My Schedule",
+            userId: user?.id,
+          });
+        }
+      });
+    }
+  }, [user]);
 
   const renderPage = () => (
     <div className="mx-auto min-h-screen flex flex-col items-center justify-center p-8 gap-8">
@@ -70,10 +47,10 @@ export default function ScheduleEditorPage() {
 
       {!isLoading && (
         <div className="absolute top-2 right-2 flex gap-2">
-          {isAdmin && (
+          {user?.userType === "ADMIN" && (
             <button
               className="bg-gray-500 rounded-md text-sm"
-              onClick={handleAdmin}
+              onClick={() => navigate("/admin")}
             >
               Admin
             </button>
@@ -87,15 +64,15 @@ export default function ScheduleEditorPage() {
         </div>
       )}
 
-      {!isLoading && (
+      {!isLoading && user && (
         <div className="absolute top-2 left-2">
           <span className="flex items-center gap-2">
             <img
-              src={photoURL}
+              src={user.photoUrl ?? placeholderAvatar}
               alt="Avatar"
               className="w-10 h-10 border border-black rounded-full"
             />
-            {name}
+            {user.fullName}
           </span>
         </div>
       )}
