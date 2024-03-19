@@ -96,6 +96,7 @@ export default function AddClassModal({ scheduleId }: { scheduleId?: string }) {
             <div className="flex w-full gap-1.5">
               {DAYS.map(day => (
                 <Button
+                  type="button"
                   variant={selectedDays.includes(day) ? "default" : "outline"}
                   onClick={() => toggleDay(day)}
                   key={day}
