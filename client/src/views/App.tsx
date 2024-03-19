@@ -1,33 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "../assets/css/App.css";
-import { Loader2 as Spinner } from 'lucide-react';
+import { Loader2 as Spinner } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 function App() {
-  const navigate = useNavigate();
-
-  function getCurrentUser() {
-    fetch("http://localhost:8080/api/user/me", {
-      method: "GET",
-      headers: {
-        'Accept': 'application/json',
-      },
-      credentials: "include",
-    })
-      .then(response => response.json())
-      .then((data) =>  {
-        if (!data.user) {
-          // No logged in user. Redirect back to login
-          navigate("/login");
-          return;
-        }
-        navigate("/app");
-        return;
-      });
-  }
-
-  useEffect(getCurrentUser, []);
+  useCurrentUser();
 
   return (
     <div className="App">
