@@ -17,6 +17,8 @@ const useSchedule = (userId: string | undefined) => {
       if (userSchedules.length === 0) {
         const userSchedule = await Api.createSchedule({ name: "My Schedule", userId });
         setSchedule(userSchedule);
+      } else {
+        setSchedule(userSchedules[0]);
       }
 
       setLoading(false);
