@@ -2,7 +2,7 @@ import { DaySchedule } from "react-schedule-view";
 import { EditableSchedule, Schedule } from "../types";
 import { ClassEvent } from "@/src/types/calendar";
 
-const baseURL = "http://localhost:8080/api";
+const baseURL = "https://localhost:8080/api";
 
 const ScheduleService = {
   getAllSchedules: async (userId: string): Promise<Schedule[]> => {
