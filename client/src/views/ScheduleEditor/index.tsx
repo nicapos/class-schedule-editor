@@ -14,7 +14,7 @@ const placeholderAvatar =
 
 export default function ScheduleEditorPage() {
   const { isLoading: isUserLoading, user } = useCurrentUser();
-  const { isLoading: isScheduleLoading, schedule } = useSchedule(user?.id);
+  const { isLoading: isScheduleLoading, schedule, daySchedule } = useSchedule(user?.id);
 
   const isLoading = isUserLoading || isScheduleLoading;
 
@@ -47,7 +47,7 @@ export default function ScheduleEditorPage() {
 
       {/* SCHEDULE */}
       <div className="w-full">
-        <CalendarPreview />
+        <CalendarPreview schedule={daySchedule} />
       </div>
 
       {!isLoading && (

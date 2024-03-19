@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Api from "../lib/api";
 import { Schedule } from "../lib/types";
+import { DaySchedule } from "react-schedule-view";
+import { ClassEvent } from "../types/calendar";
 
 /**
  * React Hook that gets the currently logged-in user's schedule data.
@@ -8,6 +10,7 @@ import { Schedule } from "../lib/types";
 const useSchedule = (userId: string | undefined) => {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [isLoading, setLoading] = useState(true);
+  const [daySchedule, setDaySchedule] = useState<DaySchedule<ClassEvent>[]>()
   
   useEffect(() => {
     async function fetchUserSchedule(userId: string) {
@@ -20,8 +23,6 @@ const useSchedule = (userId: string | undefined) => {
       } else {
         setSchedule(userSchedules[0]);
       }
-
-      setLoading(false);
     }
 
     if (userId) {
@@ -29,7 +30,22 @@ const useSchedule = (userId: string | undefined) => {
     }
   }, [userId]);
 
-  return { isLoading, schedule };
+  useEffect(() => {
+    async function fetchDaySchedule(scheduleId: string) {
+      if (!scheduleId) return;
+
+      const scheduleByDays = await Api.getSchedule(schedule?.id ?? '');
+      setDaySchedule(scheduleByDays);
+
+      setLoading(false);
+    } 
+
+    if (schedule) {
+      fetchDaySchedule(schedule.id);
+    }
+  }, [schedule])
+
+  return { isLoading, schedule, daySchedule};
 };
 
 export default useSchedule;
