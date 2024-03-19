@@ -4,8 +4,6 @@ const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const swaggerDocs = require("./middleware/docs");
 const errorHandler = require('./middleware/errorHandler');
-const fs = require('fs');
-const https = require('https');
 
 const routes = require("./routes");
 
@@ -47,13 +45,14 @@ app.use("/", routes);
 // Setup DB
 const db = require("./models");
 
-// Start HTTPS server
-const options = {
-  key: fs.readFileSync(__dirname + '/certs/key.pem'),
-  cert: fs.readFileSync(__dirname + '/certs/cert.pem')
-};
+// Configure SSL
+const fs = require('fs')
+var path = require('path');
+const key = fs.readFileSync(path.resolve('src/certs/localhost.key'))
+const cert = fs.readFileSync(path.resolve('src/certs/localhost.crt'))
 
-const sslServer = https.createServer(options, app);
+const https = require('https')
+const server = https.createServer({ key, cert }, app)
 
 // Check if --reset flag is present in the command-line arguments
 const hasResetFlag = process.argv.indexOf('--reset') !== -1;
