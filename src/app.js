@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const swaggerDocs = require("./middleware/docs");
+const errorHandler = require('./middleware/errorHandler');
 
 const routes = require("./routes");
 
@@ -36,6 +37,7 @@ app.use(
 );
 
 // Add other middlewares here
+app.use(errorHandler);
 
 // Register routes
 app.use("/", routes);
