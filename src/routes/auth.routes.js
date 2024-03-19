@@ -5,7 +5,7 @@ const uploadFile = require("../utils/uploads");
 
 const { Router } = require("express");
 const cryptoJS = require("crypto-js");
-const crypto = require('crypto');
+const crypto = require("crypto");
 
 const router = Router();
 
@@ -56,73 +56,68 @@ const router = Router();
  *                  schema:
  *                    $ref: '#/components/schemas/Error'
  */
-router.post("/register", upload.single("avatar"),
-  async (req, res) => {
-    const { fullName, email, password, phoneNumber } = req.body;
+router.post("/register", upload.single("avatar"), async (req, res) => {
+  const { fullName, email, password, phoneNumber } = req.body;
 
-    function validateField(fieldName, validatorFn) {
-      const value = req.body[fieldName];
+  function validateField(fieldName, validatorFn) {
+    const value = req.body[fieldName];
 
-      if (!value) {
-        return res
-          .status(400)
-          .json({ error: `Missing required field '${fieldName}'` });
-      }
-
-      if (!validatorFn(value)) {
-        return res
-          .status(400)
-          .json({ error: `Invalid '${fieldName}' provided` });
-      }
-
-      return null;
-    }
-
-    if (req.file && req.file.size > 5 * 1024 * 1024) {
+    if (!value) {
       return res
         .status(400)
-        .json({ error: "File size exceeds the limit of 5MB" });
+        .json({ error: `Missing required field '${fieldName}'` });
     }
 
-    if (!req.file)
-      return res
-        .status(400)
-        .json({ error: "Invalid file type (accepts jpeg, jpg, png)" });
-
-    validateField("fullName", getValidator("fullName"));
-    validateField("email", getValidator("email"));
-    validateField("password", getValidator("password"));
-    validateField("phoneNumber", getValidator("phoneNumber"));
-
-    //salting try
-    const salt = crypto.randomBytes(16).toString('hex');
-    const saltedPassword = password + salt;
-    //insert hashing password here
-    const hashedPassword = cryptoJS
-      .SHA256(saltedPassword)
-      .toString(cryptoJS.enc.Base64);
-
-    // Handle uploaded avatar
-    const uploadedAvatarURL = await uploadFile(req.file.buffer, req.file.originalname);
-
-
-    try {
-      const user = await User.create({
-        fullName: fullName,
-        email: email,
-        password: hashedPassword,
-        phoneNumber: phoneNumber,
-        photoUrl: uploadedAvatarURL,
-        userType: 'USER'
-      });
-
-      return res.status(201).json({ data: user });
-    } catch (error) {
-      return res.status(400).json({ error: error.message });
+    if (!validatorFn(value)) {
+      return res.status(400).json({ error: `Invalid '${fieldName}' provided` });
     }
+
+    return null;
   }
-);
 
+  if (req.file && req.file.size > 5 * 1024 * 1024) {
+    return res
+      .status(400)
+      .json({ error: "File size exceeds the limit of 5MB" });
+  }
+
+  if (!req.file)
+    return res
+      .status(400)
+      .json({ error: "Invalid file type (accepts jpeg, jpg, png)" });
+
+  validateField("fullName", getValidator("fullName"));
+  validateField("email", getValidator("email"));
+  validateField("password", getValidator("password"));
+  validateField("phoneNumber", getValidator("phoneNumber"));
+
+  const salt = process.env.PASSWORD_SALT;
+  const saltedPassword = password + salt;
+  const hashedPassword = cryptoJS
+    .SHA256(saltedPassword)
+    .toString(cryptoJS.enc.Base64);
+
+  // Handle uploaded avatar
+  const uploadedAvatarURL = await uploadFile(
+    req.file.buffer,
+    req.file.originalname
+  );
+
+  try {
+    const user = await User.create({
+      fullName: fullName,
+      email: email,
+      password: hashedPassword,
+      phoneNumber: phoneNumber,
+      photoUrl: uploadedAvatarURL,
+      userType: "USER",
+    });
+
+    return res.status(201).json({ data: user });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+});
 
 /**
  * @swagger
@@ -182,13 +177,13 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ error: "Missing required field 'email'" });
 
   if (!password)
-    return res
-      .status(400)
-      .json({ error: "Missing required field 'password'" });
+    return res.status(400).json({ error: "Missing required field 'password'" });
 
-  const salt = crypto.randomBytes(16).toString('hex');
+  const salt = process.env.PASSWORD_SALT;
   const saltedPassword = password + salt;
-  const hashedPassword = cryptoJS.SHA256(saltedPassword).toString(cryptoJS.enc.Base64);
+  const hashedPassword = cryptoJS
+    .SHA256(saltedPassword)
+    .toString(cryptoJS.enc.Base64);
 
   try {
     const user = await User.findOne({
@@ -210,7 +205,6 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 });
-
 
 /**
  * @swagger
@@ -243,6 +237,5 @@ router.post("/logout", async (req, res) => {
 
   return res.status(200).json({ message: "Logged out successfully" });
 });
-
 
 module.exports = router;
