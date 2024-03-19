@@ -191,10 +191,10 @@ router.post("/login", async (req, res) => {
     });
 
     if (user) {
-      req.session.userId = user.id;
-      req.session.userEmail = user.email;
+      req.session.userId = user.dataValues.id;
+      req.session.userEmail = user.dataValues.email;
 
-      res.status(200).json({ data: user });
+      res.status(200).json({ data: user.dataValues });
 
       return;
     }

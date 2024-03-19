@@ -34,7 +34,7 @@ router.get("/me", async (req, res) => {
 
   try {
     const user = await User.findByEmailAndId(email, id);
-    return res.status(200).json({ user });
+    return res.status(200).json({ user: user.dataValues });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
