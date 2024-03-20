@@ -10,7 +10,7 @@ function AdminPage() {
   const { isLoading, user } = useCurrentUser();
 
   useEffect(() => {
-    fetch("http://localhost:8080/admin/users")
+    fetch("https://localhost:8080/admin/users")
       .then((response) => response.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching user data:", error));
@@ -22,7 +22,7 @@ function AdminPage() {
   };
 
   const handleSaveEdit = (userId, updatedUserData) => {
-    fetch(`http://localhost:8080/admin/users/${userId}`, {
+    fetch(`https://localhost:8080/admin/users/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

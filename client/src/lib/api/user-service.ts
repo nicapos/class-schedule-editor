@@ -2,7 +2,7 @@ import { User } from "../types";
 
 const UserService = {
   getCurrentUser: async (): Promise<User> => {
-    const response = await fetch("http://localhost:8080/api/user/me", {
+    const response = await fetch("https://localhost:8080/api/user/me", {
       method: "GET",
       headers: {
         Accept: "application/json",

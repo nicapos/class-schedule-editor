@@ -20,7 +20,7 @@ function Login() {
   }
 
   function registerUser(formData) {
-    fetch("http://localhost:8080/api/auth/register", {
+    fetch("https://localhost:8080/api/auth/register", {
       method: "POST",
       body: formData,
     })
@@ -68,7 +68,7 @@ function Login() {
   }
 
   function loginUser({ email, password }) {
-    fetch("http://localhost:8080/api/auth/login", {
+    fetch("https://localhost:8080/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
