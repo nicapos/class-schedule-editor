@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "src/components/ui/dialog";
+import { Toggle } from "src/components/ui/toggle"
 import { Label } from "src/components/ui/label";
 import { Input } from "src/components/ui/input";
 import { useRef, useState } from "react";
@@ -92,15 +93,14 @@ export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalPr
             <Label>Day</Label>
             <div className="flex w-full gap-1.5">
               {DAYS.map(day => (
-                <Button
-                  type="button"
-                  variant={selectedDays.includes(day) ? "default" : "outline"}
-                  onClick={() => toggleDay(day)}
-                  key={day}
+                <Toggle
+                  variant="outline"
                   className="flex-1"
+                  key={day}
+                  onClick={() => toggleDay(day)}
                 >
                   {day}
-                </Button>
+                </Toggle>
               ))}
             </div>
           </div>
