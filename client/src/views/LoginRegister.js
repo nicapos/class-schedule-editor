@@ -12,6 +12,7 @@ function Login() {
   const [formMode, setFormMode] = useState("LOGIN");
   const [avatarPreview, setAvatarPreview] = useState(placeholderImage);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ function Login() {
   }
 
   function registerUser(formData) {
+    setLoading(true); // Start registration process
     fetch("https://localhost:8080/api/auth/register", {
       method: "POST",
       body: formData,
@@ -34,15 +36,18 @@ function Login() {
         if (response.status === 400) {
           throw new Error("Registration failed");
         }
-
         alert("Registration successful! Please proceed to login.");
         setFormMode("LOGIN");
       })
       .catch((error) => {
         console.error(error);
         alert("Registration failed. Please try again.");
+      })
+      .finally(() => {
+        setLoading(false); // Registration process ended
       });
   }
+  
 
   function validateRegistration(formData) {
     // Validation checks: username, phone number, email, password
@@ -218,7 +223,7 @@ function Login() {
         <p style={{ color: "red" }}>{errorMessage}</p>
 
         <div className="submit-container">
-          <button type="submit">
+          <button type="submit" disabled={isLoading}>
             {formMode === "REGISTER" ? "Create Account" : "Log-in"}
           </button>
         </div>
