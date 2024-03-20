@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/css/LoginRegisterForm.css";
 import userIcon from "../assets/img/person.png";
 import emailIcon from "../assets/img/email.png";
@@ -14,6 +14,12 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setAvatarPreview(placeholderImage);
+    setErrorMessage("");
+  }, [formMode]);
+
 
   function handleChangeAvatar(e) {
     setAvatarPreview(URL.createObjectURL(e.target.files[0]));
