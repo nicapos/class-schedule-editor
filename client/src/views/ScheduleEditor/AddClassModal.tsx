@@ -1,4 +1,5 @@
 import React from "react";
+import { PlusIcon } from "@radix-ui/react-icons"
 import { Button } from "src/components/ui/button";
 import {
   Dialog,
@@ -64,7 +65,9 @@ export default function AddClassModal({ scheduleId }: { scheduleId?: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Add Class</Button>
+        <Button variant="default">
+          <PlusIcon className="h-4 w-4 mr-2" />Add Class
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
