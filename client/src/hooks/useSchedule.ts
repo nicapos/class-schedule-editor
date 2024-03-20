@@ -30,22 +30,28 @@ const useSchedule = (userId: string | undefined) => {
     }
   }, [userId]);
 
+  async function fetchDaySchedule(scheduleId: string) {
+    if (!scheduleId) return;
+
+    const scheduleByDays = await Api.getSchedule(schedule?.id ?? '');
+    setDaySchedule(scheduleByDays);
+
+    setLoading(false);
+  } 
+
   useEffect(() => {
-    async function fetchDaySchedule(scheduleId: string) {
-      if (!scheduleId) return;
-
-      const scheduleByDays = await Api.getSchedule(schedule?.id ?? '');
-      setDaySchedule(scheduleByDays);
-
-      setLoading(false);
-    } 
-
     if (schedule) {
       fetchDaySchedule(schedule.id);
     }
   }, [schedule])
 
-  return { isLoading, schedule, daySchedule};
+  function triggerRefresh() {
+    if (schedule) {
+      fetchDaySchedule(schedule.id);
+    }
+  }
+
+  return { isLoading, schedule, daySchedule, triggerRefresh };
 };
 
 export default useSchedule;

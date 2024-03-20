@@ -9,8 +9,6 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "src/components/ui/context-menu";
-import Api from "src/lib/api";
-import { toast } from "sonner";
 
 type TileComponentProps = { event: ClassEvent; tileColor?: string };
 
@@ -32,27 +30,18 @@ export const CalendarTile: React.FC<TileComponentProps> = ({
   </div>
 );
 
-export const ContextCalendarTile: React.FC<TileComponentProps> = ({
+interface ContextCalendarTileProps extends TileComponentProps {
+  handleEdit: (id: string) => void;
+  handleDelete: (id: string, name: string) => void;
+}
+
+export const ContextCalendarTile: React.FC<ContextCalendarTileProps> = ({
   event,
   tileColor = "#087830",
+  handleEdit,
+  handleDelete,
 }) => {
   const classId = event.id;
-
-  function handleEdit() {
-    alert(`Editing ${classId}`);
-  }
-
-  function handleDelete() {
-    const confirmationMsg = `Are you sure you want to delete this instance of ${event.title}?\nThis action cannot be undone.`;
-    
-    if (window.confirm(confirmationMsg) === true) {
-      toast.promise(Api.deleteClass(classId), {
-        loading: 'Loading...',
-        success: () => `'Deleted instance of '${event.title}'`,
-        error: `Error in deleting instance of '${event.title}'`,
-      });
-    }
-  }
 
   return (
     <ContextMenu>
@@ -62,8 +51,13 @@ export const ContextCalendarTile: React.FC<TileComponentProps> = ({
       <ContextMenuContent>
         <ContextMenuLabel>{event.title}</ContextMenuLabel>
         <ContextMenuSeparator />
-        <ContextMenuItem onClick={handleEdit}>Edit</ContextMenuItem>
-        <ContextMenuItem className="text-red-500 hover:font-medium" onClick={handleDelete}>
+        <ContextMenuItem onClick={() => handleEdit(classId)}>
+          Edit
+        </ContextMenuItem>
+        <ContextMenuItem
+          className="text-red-500 hover:font-medium"
+          onClick={() => handleDelete(classId, event.title)}
+        >
           Delete
         </ContextMenuItem>
       </ContextMenuContent>

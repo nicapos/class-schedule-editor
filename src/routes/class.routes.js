@@ -141,7 +141,7 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Class item not found' });
     }
     await classItem.destroy();
-    res.status(204).json({ message: 'Class item deleted successfully' });
+    res.status(200).json({ message: 'Class item deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

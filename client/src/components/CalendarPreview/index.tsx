@@ -5,11 +5,13 @@ import { ContextCalendarTile } from "./tiles";
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const emptyDaySchedule = daysOfWeek.map((day) => ({ name: day, events: [] }));
 
-function CalendarPreview({
-  schedule,
-}: {
+interface CalendarPreviewProps {
   schedule?: DaySchedule<ClassEvent>[];
-}) {
+  handleEdit: (id: string) => void;
+  handleDelete: (id: string, name: string) => void;
+}
+
+function CalendarPreview({ schedule, handleEdit, handleDelete }: CalendarPreviewProps) {
   const theme = createTheme("apple", {
     style: {
       dayLabels: {
@@ -19,7 +21,14 @@ function CalendarPreview({
         fontSize: "50%",
       },
     },
-    customTileComponent: ContextCalendarTile,
+    // @ts-ignore
+    customTileComponent: (props: any) => (
+      <ContextCalendarTile
+        {...props}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+    ),
   });
 
   return (

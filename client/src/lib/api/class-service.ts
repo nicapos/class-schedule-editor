@@ -27,7 +27,8 @@ const ClassService = {
       credentials: "include",
     });
 
-    const data = await response.json();
+    const json = await response.json();
+    return json;
   }
 };
 

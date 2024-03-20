@@ -13,14 +13,17 @@ import {
 } from "src/components/ui/dialog";
 import { Label } from "src/components/ui/label";
 import { Input } from "src/components/ui/input";
-import { toast } from "sonner";
 import { useRef, useState } from "react";
-import Api from "src/lib/api";
 import { ClassItem } from "src/lib/types";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export default function AddClassModal({ scheduleId }: { scheduleId?: string }) {
+interface AddClassModalProps {
+  scheduleId?: string;
+  handleAdd: (classItems: ClassItem[]) => void;
+}
+
+export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
@@ -41,25 +44,16 @@ export default function AddClassModal({ scheduleId }: { scheduleId?: string }) {
     formData.append("scheduleId", scheduleId);
 
     // TODO: Validate form
-    
-    selectedDays.forEach((day) => {
+
+    // Create one instance of ClassItem for every selected day
+    const classItems = selectedDays.map((day) => {
       formData.append("day", day);
 
-      const classItem = Object.fromEntries(formData.entries()) as unknown as ClassItem;
-
-      toast.promise(Api.createClass(classItem), {
-        loading: 'Loading...',
-        success: (data: ClassItem) => {
-          // Reset selected days
-          setSelectedDays([]);
-
-          return `'${data.className}' (${data.day}) has been added`
-        },
-        error: `Error in adding class '${classItem.className}' (${day})`,
-      });
-
-      console.log(classItem);
+      const classItem = Object.fromEntries(formData.entries()) as unknown;
+      return classItem as ClassItem;
     });
+
+    handleAdd(classItems);
   }
 
   return (
