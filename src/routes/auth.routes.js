@@ -9,6 +9,36 @@ const crypto = require("crypto");
 
 const router = Router();
 
+// Custom middleware to check session timeout
+const sessionTimeoutMiddleware = (req, res, next) => {
+  // Check if the user has an active session
+  if (req.session && req.session.lastAccess) {
+      const currentTime = new Date().getTime();
+      const sessionTimeout = 15 * 60 * 1000; // Session timeout set to 15 minutes (in milliseconds)
+
+      // Check if the session has expired
+      if (currentTime - req.session.lastAccess > sessionTimeout) {
+          // If the session has expired, destroy the session and redirect to login page
+          req.session.destroy((err) => {
+              if (err) {
+                  console.error('Error destroying session:', err);
+              }
+              res.redirect('/login'); // Redirect to your login page
+          });
+          return;
+      }
+  }
+
+  // Update lastAccess time in session
+  req.session.lastAccess = new Date().getTime();
+
+  // Call the next middleware
+  next();
+};
+
+// Session middleware setup
+router.use(sessionTimeoutMiddleware);
+
 /**
  * @swagger
  * /auth/register:
