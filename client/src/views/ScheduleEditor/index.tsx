@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { UploadIcon, DownloadIcon } from "@radix-ui/react-icons"
 import CalendarPreview from "src/components/CalendarPreview";
 import { Toaster } from "src/components/ui/sonner";
@@ -10,9 +10,10 @@ import { useNavigate } from "react-router-dom";
 import AddClassModal from "./AddClassModal";
 
 import Api from "src/lib/api";
-import { ClassItem } from "src/lib/types";
+import { ClassItem, EditableClassItem } from "src/lib/types";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import useSchedule from "src/hooks/useSchedule";
+import EditClassModal from "./EditClassModal";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
@@ -20,6 +21,8 @@ const placeholderAvatar =
 export default function ScheduleEditorPage() {
   const { isLoading: isUserLoading, user } = useCurrentUser();
   const { isLoading: isScheduleLoading, schedule, daySchedule, triggerRefresh } = useSchedule(user?.id);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedClassId, setSelectedClassId] = useState<string>();
 
   const isLoading = isUserLoading || isScheduleLoading;
 
@@ -65,8 +68,20 @@ export default function ScheduleEditorPage() {
     );
   }
 
-  function handleEditClass(id: string) {
+  function handleOpenEditModal(id: string) {
+    setIsEditOpen(true);
+    setSelectedClassId(id);
+  }
 
+  function handleEditClass(id: string, classItem: EditableClassItem) {
+    toast.promise(Api.updateClass(id, classItem), {
+      loading: 'Loading...',
+      success: () => {
+        triggerRefresh();
+        return `Updated class '${classItem.className}'`;
+      },
+      error: `Error in updating instance of '${classItem}'`,
+    });
   }
 
   function handleDeleteClass(id: string, name: string) {
@@ -77,7 +92,7 @@ export default function ScheduleEditorPage() {
         loading: 'Loading...',
         success: () => {
           triggerRefresh();
-          return `'Deleted instance of '${name}'`;
+          return `Deleted instance of '${name}`;
         },
         error: `Error in deleting instance of '${name}'`,
       });
@@ -102,6 +117,14 @@ export default function ScheduleEditorPage() {
         <AddClassModal
           scheduleId={schedule?.id}
           handleAdd={handleAddClass} />
+        <EditClassModal
+          scheduleId={schedule?.id}
+          classId={selectedClassId}
+          handleEdit={handleEditClass}
+          isOpen={isEditOpen}
+          setOpen={setIsEditOpen}
+        />
+
         <Button variant="secondary" className="ml-auto">
           Import Schedule <DownloadIcon className="h-4 w-4 ml-2" />
         </Button>
@@ -114,7 +137,7 @@ export default function ScheduleEditorPage() {
       <div className="w-full">
         <CalendarPreview
           schedule={daySchedule}
-          handleEdit={handleEditClass}
+          handleEdit={handleOpenEditModal}
           handleDelete={handleDeleteClass} />
       </div>
 

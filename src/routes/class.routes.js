@@ -69,6 +69,46 @@ router.get('/', async (req, res) => {
 /**
  * @swagger
  * /class/{id}:
+ *   get:
+ *     summary: Get class item by ID
+ *     tags: [classes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: ID of the class item to retrieve
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Class item retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ClassItem'
+ *       '404':
+ *         description: Class item not found
+ *       '500':
+ *         description: Internal Server Error
+ */
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const classItem = await ClassItem.findByPk(id);
+
+    if (!classItem) {
+      return res.status(404).json({ error: 'Class item not found' });
+    }
+    res.status(200).json(classItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+/**
+ * @swagger
+ * /class/{id}:
  *   put:
  *     summary: Update class item by id
  *     tags: [classes]
@@ -105,7 +145,7 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Class item not found' });
     }
     await classItem.update(req.body);
-    res.json(classItem);
+    res.status(201).json(classItem);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
