@@ -46,13 +46,12 @@ app.use("/", routes);
 const db = require("./models");
 
 // Configure SSL
-const fs = require('fs')
-var path = require('path');
-const key = fs.readFileSync(path.resolve('src/certs/localhost.key'))
-const cert = fs.readFileSync(path.resolve('src/certs/localhost.crt'))
-
-const https = require('https')
-const server = https.createServer({ key, cert }, app)
+const fs = require('fs');
+const https = require('https');
+const key = fs.readFileSync('./ssl/localhost-key.pem');
+const cert = fs.readFileSync('./ssl/localhost.pem');
+const credentials = { key, cert };
+const httpsServer = https.createServer(credentials, app);
 
 // Check if --reset flag is present in the command-line arguments
 const hasResetFlag = process.argv.indexOf('--reset') !== -1;
@@ -64,7 +63,7 @@ db.sequelize.sync({ force: hasResetFlag })
 
 const PORT = process.env.PORT || 8080;
 // app.listen(PORT, () => {
-app.listen(PORT, () => {
+  httpsServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} (available at https://localhost:${PORT}/)`);
 
   // Show docs

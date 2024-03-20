@@ -21,7 +21,7 @@ export default function ScheduleEditorPage() {
   const navigate = useNavigate();
 
   function handleLogout() {
-    fetch("http://localhost:8080/api/auth/logout", {
+    fetch("https://localhost:8080/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });

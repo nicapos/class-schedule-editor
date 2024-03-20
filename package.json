@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "dev:server": "nodemon src/app.js",
-    "dev:client": "npm start --prefix ./client",
+    "dev:server": "HTTPS=true SSL_CRT_FILE=./ssl/localhost.pem SSL_KEY_FILE=./ssl/localhost-key.pem nodemon src/app.js",
+    "dev:client": "HTTPS=true SSL_CRT_FILE=./ssl/localhost.pem SSL_KEY_FILE=./ssl/localhost-key.pem npm start --prefix ./client",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "build:server": "npx tsc",
     "build:client": "cd client && npm run build",
@@ -35,6 +35,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "winston": "^3.12.0"
   }
 }
