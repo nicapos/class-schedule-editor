@@ -5,6 +5,7 @@ const corsMiddleware = (req, res, next) => {
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.setHeader("Access-Control-Allow-Origin", "https://localhost:3000");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 
   // Handle preflight requests
   if (req.method === "OPTIONS") {
