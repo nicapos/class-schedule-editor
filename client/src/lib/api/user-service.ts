@@ -1,6 +1,6 @@
 import { User } from "../types";
 
-const baseURL = "https://localhost:8080/api";
+const baseURL = "http://localhost:8080/api";
 
 const UserService = {
   getCurrentUser: async (): Promise<User> => {
