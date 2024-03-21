@@ -7,7 +7,7 @@ import App from "./views/App";
 import reportWebVitals from "./lib/reportWebVitals";
 import ScheduleEditor from "./views/ScheduleEditor";
 import LoginRegister from "./views/LoginRegister";
-import AdminPage from "./views/AdminPage";
+import AdminPage from "./views/Admin";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

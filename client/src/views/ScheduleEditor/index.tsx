@@ -15,6 +15,7 @@ import useCurrentUser from "src/hooks/useCurrentUser";
 import useSchedule from "src/hooks/useSchedule";
 import EditClassModal from "./EditClassModal";
 import ImportScheduleModal from "./ImportScheduleModal";
+import { getNameInitials } from "src/lib/utils";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
@@ -39,20 +40,6 @@ export default function ScheduleEditorPage() {
     });
 
     navigate("/login");
-  }
-
-  /**
-   * Gets the first two initials, given a name
-   * @param name 
-   * @returns string of 2 uppercase characters
-   */
-  function getNameInitials(name: string) {
-    const words = name.trim().split(/\s+/);
-    let initials = '';
-    for (let i = 0; i < Math.min(2, words.length); i++) {
-      initials += words[i][0].toUpperCase();
-    }
-    return initials;
   }
 
   function handleAddClass(classItems: ClassItem[]) {
