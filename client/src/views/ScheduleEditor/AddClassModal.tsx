@@ -60,7 +60,7 @@ export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalPr
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">
+        <Button variant="default" className="mr-auto">
           <PlusIcon className="h-4 w-4 mr-2" />Add Class
         </Button>
       </DialogTrigger>
