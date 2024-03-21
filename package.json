@@ -11,7 +11,7 @@
     "build:client": "cd client && npm run build",
     "start:server": "node dist/index.js",
 
-    "dev:server:win": "set HTTPS=true && set SSL_CRT_FILE=./ssl/localhost.pem && SSL_KEY_FILE=./ssl/localhost-key.pem && nodemon src/app.js",
+    "dev:server:win": "set HTTPS=true && set SSL_CRT_FILE=./ssl/localhost.pem && set SSL_KEY_FILE=./ssl/localhost-key.pem && nodemon src/app.js",
     "dev:client:win": "set HTTPS=true && set SSL_CRT_FILE=./ssl/localhost.pem && set SSL_KEY_FILE=./ssl/localhost-key.pem && npm start --prefix ./client",
     "dev:win": "concurrently \"npm run dev:server:win\" \"npm run dev:client:win\""
   },
