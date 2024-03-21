@@ -1,39 +1,52 @@
-DO $$ BEGIN
-    CREATE TYPE ACCOUNT_TYPE AS ENUM('ADMIN', 'USER');
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+-- Define ENUM type
+CREATE TYPE userType AS ENUM ('ADMIN', 'USER');
 
-CREATE TABLE IF NOT EXISTS users (
-    id          SERIAL PRIMARY KEY,
-    full_name   VARCHAR(255) NOT NULL,
-    email       VARCHAR(320) UNIQUE NOT NULL,
-    password    VARCHAR(255) NOT NULL,
-    phone_num   VARCHAR(13) NOT NULL,
-    photo_url   VARCHAR(255),
-    user_type   ACCOUNT_TYPE NOT NULL
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS public.files;
+DROP TABLE IF EXISTS public.classes;
+DROP TABLE IF EXISTS public.schedules;
+DROP TABLE IF EXISTS public.users;
+
+-- Create tables
+CREATE TABLE public.files (
+    id SERIAL PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    "data" BYTEA NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS class_schedule (
-    id          SERIAL PRIMARY KEY,
-    name        VARCHAR(32),
-    user_id     INT,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+CREATE TABLE public.users (
+    id UUID PRIMARY KEY,
+    "fullName" VARCHAR(255) NOT NULL,
+    email VARCHAR(320) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "phoneNumber" VARCHAR(13) NOT NULL,
+    "photoUrl" VARCHAR(255),
+    "userType" userType NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT users_email_key UNIQUE (email)
 );
 
-DO $$ BEGIN
-    CREATE TYPE WEEK_DAY AS ENUM('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+CREATE TABLE public.schedules (
+    id VARCHAR(10) PRIMARY KEY,
+    "name" VARCHAR(32),
+    "userId" UUID,
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "schedules_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id) ON UPDATE CASCADE
+);
 
-CREATE TABLE IF NOT EXISTS class_items (
-    id          SERIAL PRIMARY KEY,
-    class_name  VARCHAR(255) NOT NULL,
-    day         WEEK_DAY NOT NULL,
-    start_time  VARCHAR(5) NOT NULL,
-    end_time    VARCHAR(5) NOT NULL,
-    location    VARCHAR(255) NOT NULL,
-    schedule_id INT,
-    FOREIGN KEY (schedule_id) REFERENCES class_schedule(id)
+CREATE TABLE public.classes (
+    id SERIAL PRIMARY KEY,
+    "className" VARCHAR(255) NOT NULL,
+    "day" VARCHAR(32) NOT NULL,
+    "startTime" VARCHAR(5) NOT NULL,
+    "endTime" VARCHAR(5) NOT NULL,
+    "location" VARCHAR(255) NOT NULL,
+    "scheduleId" VARCHAR(10),
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "classes_scheduleId_fkey" FOREIGN KEY ("scheduleId") REFERENCES public.schedules(id) ON UPDATE CASCADE
 );
