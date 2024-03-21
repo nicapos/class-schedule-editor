@@ -8,4 +8,7 @@ uploads/*
 # Ignore file with GCP service account details
 **/config/service-account.json
 
+# Hide logs
+logs/*
+
 .env

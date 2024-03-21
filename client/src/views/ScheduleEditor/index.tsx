@@ -14,6 +14,7 @@ import { ClassItem, EditableClassItem } from "src/lib/types";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import useSchedule from "src/hooks/useSchedule";
 import EditClassModal from "./EditClassModal";
+import ImportScheduleModal from "./ImportScheduleModal";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
@@ -21,7 +22,10 @@ const placeholderAvatar =
 export default function ScheduleEditorPage() {
   const { isLoading: isUserLoading, user } = useCurrentUser();
   const { isLoading: isScheduleLoading, schedule, daySchedule, triggerRefresh } = useSchedule(user?.id);
+  
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+
   const [selectedClassId, setSelectedClassId] = useState<string>();
 
   const isLoading = isUserLoading || isScheduleLoading;
@@ -99,6 +103,10 @@ export default function ScheduleEditorPage() {
     }
   }
 
+  function handleImport(file: File) {
+    // TODO: Handle file import
+  }
+
   function handleExport(){
     // Call getSchedule to get the schedule data from api schedule-service
     if(schedule?.id !== undefined) {
@@ -128,19 +136,28 @@ export default function ScheduleEditorPage() {
         </p>
       </header>
 
-      <div className="flex gap-4 w-full">
-        <AddClassModal
-          scheduleId={schedule?.id}
-          handleAdd={handleAddClass} />
-        <EditClassModal
+      {/* MODALS */}
+      <div>
+      <EditClassModal
           scheduleId={schedule?.id}
           classId={selectedClassId}
           handleEdit={handleEditClass}
           isOpen={isEditOpen}
           setOpen={setIsEditOpen}
         />
+        <ImportScheduleModal
+          handleImport={handleImport}
+          isOpen={isImportOpen}
+          setOpen={setIsImportOpen} />
+      </div>
 
-        <Button variant="secondary" className="ml-auto">
+      {/* ACTIONS */}
+      <div className="flex gap-4 w-full items-center">
+        <AddClassModal
+          scheduleId={schedule?.id}
+          handleAdd={handleAddClass} />
+        
+        <Button variant="secondary" onClick={() => setIsImportOpen(true)}>
           Import Schedule <DownloadIcon className="h-4 w-4 ml-2" />
         </Button>
         <Button variant="outline" onClick={handleExport}>
