@@ -41,11 +41,28 @@ function AdminPage() {
     });
   }
 
+  function handleDelete(id: string, name: string) {
+    const confirmationMsg = `Are you sure you want to delete user '${name}'?\nThis action cannot be undone.`;
+
+    if (window.confirm(confirmationMsg) === true) {
+      toast.promise(Api.deleteUser(id), {
+        loading: "Loading...",
+        success: () => {
+          fetchUsers();
+          return `Deleted instance of '${name}`;
+        },
+        error: `Error in deleting instance of '${name}'`,
+      });
+    }
+  }
+
   function renderRow(user: User) {
     function handleOpenEdit() {
       setSelectedUser(user);
       setEditModalOpen(true);
     }
+
+    const handleOpenDelete = () => handleDelete(user.id, user.fullName);
 
     return (
       <tr key={user.id}>
@@ -64,7 +81,9 @@ function AdminPage() {
           <Button variant="secondary" className="mr-2" onClick={handleOpenEdit}>
             Edit
           </Button>
-          <Button variant="secondary">Delete</Button>
+          <Button variant="secondary" onClick={handleOpenDelete}>
+            Delete
+          </Button>
         </td>
       </tr>
     );
