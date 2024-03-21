@@ -14,18 +14,12 @@ const sessionTimeoutMiddleware = (req, res, next) => {
   // Check if the user has an active session
   if (req.session && req.session.lastAccess) {
       const currentTime = new Date().getTime();
-      const sessionTimeout = 15 * 60 * 1000; // Session timeout set to 15 minutes (in milliseconds)
+      const sessionTimeout = 2 * 60 * 1000; // Session timeout set to 15 minutes (in milliseconds)
 
       // Check if the session has expired
       if (currentTime - req.session.lastAccess > sessionTimeout) {
           // If the session has expired, destroy the session and redirect to login page
-          req.session.destroy((err) => {
-              if (err) {
-                  console.error('Error destroying session:', err);
-              }
-              res.redirect('/login'); // Redirect to your login page
-          });
-          return;
+          req.session = null ;
       }
   }
 
