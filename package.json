@@ -15,7 +15,7 @@
     "dev:client:win": "($env:HTTPS = \"true\") -and ($env:SSL_CRT_FILE = \".\\ssl\\localhost.pem\") -and ($env:SSL_KEY_FILE = \".\\ssl\\localhost-key.pem\") -and (npm start --prefix .\\client)",
     "dev:win": "concurrently \"npm run dev:server:win\" \"npm run dev:client:win\"",
 
-    "heroku-prebuild": "if [ ! -f .npm-installed ]; then npm install && touch .npm-installed && cd frontend && npm install; fi"
+    "heroku-prebuild": "if [ ! -f .npm-installed ]; then npm install && touch .npm-installed && cd client && npm install; fi"
   },
   "author": "",
   "license": "ISC",
