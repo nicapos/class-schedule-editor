@@ -62,9 +62,8 @@ db.sequelize.sync({ force: hasResetFlag })
 
 
 const PORT = process.env.PORT || 8080;
-// app.listen(PORT, () => {
-  httpsServer.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} (available at https://localhost:${PORT}/)`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT} (available at http://localhost:${PORT}/)`);
 
   // Show docs
   swaggerDocs(app, PORT);

@@ -1,6 +1,6 @@
 import { ClassItem, EditableClassItem } from "../types";
 
-const baseURL = "https://localhost:8080/api";
+const baseURL = "http://localhost:8080/api";
 
 const ClassService = {
   createClass: async (classItem: EditableClassItem): Promise<ClassItem> => {

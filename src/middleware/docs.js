@@ -12,7 +12,7 @@ const getOptions = (port) => ({
     },
     servers: [
       {
-        url: `https://localhost:${port}/api`,
+        url: `http://localhost:${port}/api`,
       },
     ],
   },
@@ -31,7 +31,7 @@ function swaggerDocs(app, port) {
     res.send(specs);
   });
 
-  console.log(`Docs available at https://localhost:${port}/docs`);
+  console.log(`Docs available at http://localhost:${port}/docs`);
 }
 
 module.exports = swaggerDocs;
