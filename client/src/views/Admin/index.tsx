@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "src/assets/css/Admin.css";
 import { Loader2 as Spinner } from "lucide-react";
-import useCurrentUser from "src/hooks/useCurrentUser";
-import Api from "src/lib/api";
+import { Toaster } from "src/components/ui/sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
-import { User } from "src/lib/types";
 import EditUserModal from "./EditUserModal";
+import { toast } from "sonner";
+
+import useCurrentUser from "src/hooks/useCurrentUser";
+import Api from "src/lib/api";
+import { User } from "src/lib/types";
 import { getNameInitials } from "src/lib/utils";
 
 function AdminPage() {
@@ -16,24 +19,34 @@ function AdminPage() {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const { isLoading: isUserLoading } = useCurrentUser();
 
-  useEffect(() => {
-    async function fetchUsers() {
-      const fetchedUsers = await Api.getAllUsers();
-      setUsers(fetchedUsers);
-      setIsLoading(false);
-    }
-
-    fetchUsers();
-  }, []);
-
-  function handleOpenEdit(user: User) {
-    setSelectedUser(user);
-    setEditModalOpen(true);
+  async function fetchUsers() {
+    const fetchedUsers = await Api.getAllUsers();
+    setUsers(fetchedUsers);
   }
 
-  function handleEditUser(user: User) {}
+  useEffect(() => {
+    setIsLoading(true);
+    fetchUsers().then(() => setIsLoading(false));
+  }, []);
+
+  function handleEditUser(user: User) {
+    toast.promise(Api.updateUser(user.id, user), {
+      loading: "Loading...",
+      success: () => {
+        fetchUsers();
+        setEditModalOpen(false);
+        return `Updated user '${user.fullName}'`;
+      },
+      error: `Error in updating instance of '${user.fullName}'`,
+    });
+  }
 
   function renderRow(user: User) {
+    function handleOpenEdit() {
+      setSelectedUser(user);
+      setEditModalOpen(true);
+    }
+
     return (
       <tr key={user.id}>
         <td>{user.fullName}</td>
@@ -48,11 +61,7 @@ function AdminPage() {
         </td>
         <td>{user.userType}</td>
         <td>
-          <Button
-            variant="secondary"
-            className="mr-2"
-            onClick={() => handleOpenEdit(user)}
-          >
+          <Button variant="secondary" className="mr-2" onClick={handleOpenEdit}>
             Edit
           </Button>
           <Button variant="secondary">Delete</Button>
@@ -63,6 +72,8 @@ function AdminPage() {
 
   const renderPage = () => (
     <>
+      <Toaster richColors expand />
+
       <EditUserModal
         selectedUser={selectedUser}
         handleEdit={handleEditUser}
