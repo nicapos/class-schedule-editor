@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const User = require("../models/User");
+const cryptoJS = require("crypto-js");
 
 const router = Router();
 
@@ -110,7 +111,17 @@ router.get("/all", async (req, res) => {
 router.put("/:id", async (req, res) => {
   // TODO: Check if user is admin or owner
   const userId = req.params.id;
-  const userData = req.body;
+  let userData = req.body;
+
+  if (userData['password']) {
+    const salt = process.env.PASSWORD_SALT;
+    const saltedPassword = userData['password'] + salt;
+    const hashedPassword = cryptoJS
+      .SHA256(saltedPassword)
+      .toString(cryptoJS.enc.Base64);
+
+    userData['password'] = hashedPassword;
+  }
 
   try {
     await User.update(userData, { where: { id: userId } });
