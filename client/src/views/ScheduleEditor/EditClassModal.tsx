@@ -40,7 +40,6 @@ export default function EditClassModal({
 
   function triggerFormSubmit(e: any) {
     e.preventDefault();
-    console.log('submitting form...')
     if (!scheduleId || !classId || !day) return;
 
     const editedClassItem: EditableClassItem = {
@@ -61,7 +60,6 @@ export default function EditClassModal({
     const fetchClassDetails = async (id: string) => {
       setIsLoading(true);
       const classItem: ClassItem = await Api.getClass(id);
-      console.log(classItem);
 
       // Set form data to current class details
       setName(classItem.className);
@@ -76,7 +74,6 @@ export default function EditClassModal({
     if (isOpen && classId) {
       fetchClassDetails(classId);
     }
-    console.log('triggered', isOpen, classId)
   }, [isOpen, classId]);
 
   const renderForm = () => (

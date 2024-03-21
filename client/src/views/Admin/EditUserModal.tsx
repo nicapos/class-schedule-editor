@@ -51,7 +51,6 @@ export default function EditUserModal({
   }, [isOpen, selectedUser]);
 
   function triggerFormSubmit(e: any) {
-    console.log("validating")
     e.preventDefault();
 
     if (!selectedUser) return;
