@@ -152,7 +152,7 @@ export default function ScheduleEditorPage() {
       </div>
 
       {/* ACTIONS */}
-      <div className="flex gap-4 w-full">
+      <div className="flex gap-4 w-full items-center">
         <AddClassModal
           scheduleId={schedule?.id}
           handleAdd={handleAddClass} />

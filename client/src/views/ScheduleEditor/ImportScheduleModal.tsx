@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "src/components/ui/button";
 import {
   Dialog,
@@ -18,7 +17,6 @@ interface ImportScheduleModalProps {
   handleImport: (file: File) => void;
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-
 }
 
 export default function ImportScheduleModal({ handleImport, isOpen, setOpen }: ImportScheduleModalProps) {

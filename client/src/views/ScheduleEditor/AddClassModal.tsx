@@ -16,6 +16,7 @@ import { Label } from "src/components/ui/label";
 import { Input } from "src/components/ui/input";
 import { useRef, useState } from "react";
 import { ClassItem } from "src/lib/types";
+import { validate, validateTimeRange } from "src/lib/validation";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -27,6 +28,7 @@ interface AddClassModalProps {
 export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   function toggleDay(day: string) {
     if (selectedDays.includes(day)) {
@@ -43,16 +45,46 @@ export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalPr
 
     const formData = new FormData(formRef.current);
     formData.append("scheduleId", scheduleId);
+    const classItem = Object.fromEntries(formData.entries()) as Record<string, string>;
+    
+    // Validate form
+    if (selectedDays.length === 0) {
+      setErrorMessage("Please fill in all required fields.");
+      return false;
+    }
 
-    // TODO: Validate form
+    const validations = [
+      { field: "className", message: "Invalid class name. Use only alphanumeric characters, spaces, square brackets, hyphens, and quotes. Length should be 2 to 50 characters." },
+      { field: "startTime", message: "Invalid time format for start time. Use HH:MM (00:00-23:59)." },
+      { field: "endTime", message: "Invalid time format for end time. Use HH:MM (00:00-23:59)." },
+      {
+        field: "location",
+        message:
+          "Invalid location. Use only alphanumeric characters, space, square brackets, hyphens, and quotes. Length should be less than 50 characters.",
+      },
+    ];
+
+    for (const validation of validations) {
+      const fieldValue = formData.get(validation.field) as string;
+      if (!fieldValue && validation.field !== "location") {
+        setErrorMessage("Please fill in all required fields.");
+        return false;
+      }
+
+      if (!validate(validation.field, fieldValue)) {
+        setErrorMessage(validation.message);
+        return false;
+      }
+    }
+
+    if (!validateTimeRange(formData.get("startTime"), formData.get("endTime"))) {
+      setErrorMessage("Invalid time range or time difference less than 15 minutes.")
+      return false;
+    }
+    setErrorMessage('');
 
     // Create one instance of ClassItem for every selected day
-    const classItems = selectedDays.map((day) => {
-      formData.append("day", day);
-
-      const classItem = Object.fromEntries(formData.entries()) as unknown;
-      return classItem as ClassItem;
-    });
+    const classItems = selectedDays.map((day) => ({ ...classItem, day } as ClassItem));
 
     handleAdd(classItems);
   }
@@ -76,7 +108,7 @@ export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalPr
           ref={formRef}
           method="POST"
           encType="multipart/form-data"
-          className="flex flex-col w-full max-w-sm gap-5 py-4 mx-auto"
+          className="flex flex-col w-full max-w-sm gap-5 pt-4 mx-auto"
         >
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="className">Class Name</Label>
@@ -129,7 +161,7 @@ export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalPr
           </div>
 
           <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="location">Location <span className="opacity-60">(optional)</span></Label>
             <Input
               type="text"
               name="location"
@@ -137,13 +169,16 @@ export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalPr
               placeholder="Location"
             />
           </div>
+
+          <p className="text-sm text-red-500 flex h-5">{errorMessage}</p>
         </form>
+        
 
         <DialogFooter className="md:justify-end">
           <DialogClose asChild>
             <Button
               type="button"
-              variant="secondary"
+              variant="default"
               onClick={triggerFormSubmit}
             >
               Add
