@@ -99,6 +99,21 @@ export default function ScheduleEditorPage() {
     }
   }
 
+  function handleExport(){
+    // Call getSchedule to get the schedule data from api schedule-service
+    if(schedule?.id !== undefined) {
+      Api.getSchedule(schedule?.id).then((data) => {
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'schedule.json';
+        a.click();
+      })} else {
+        toast.error("Schedule ID not found");
+      }
+  }
+
   const renderPage = () => (
     <div className="mx-auto min-h-screen flex flex-col items-center justify-center p-8 gap-8">
       <Toaster richColors expand />
@@ -128,7 +143,7 @@ export default function ScheduleEditorPage() {
         <Button variant="secondary" className="ml-auto">
           Import Schedule <DownloadIcon className="h-4 w-4 ml-2" />
         </Button>
-        <Button variant="outline">
+        <Button variant="outline" onClick={handleExport}>
           Export Schedule <UploadIcon className="h-4 w-4 ml-2" />
         </Button>
       </div>
