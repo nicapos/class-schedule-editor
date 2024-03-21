@@ -130,6 +130,8 @@ export default function EditClassModal({
           name="location"
           id="location"
           placeholder="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
         />
       </div>
     </form>
