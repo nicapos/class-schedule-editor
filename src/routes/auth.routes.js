@@ -14,7 +14,7 @@ const sessionTimeoutMiddleware = (req, res, next) => {
   // Check if the user has an active session
   if (req.session && req.session.lastAccess) {
       const currentTime = new Date().getTime();
-      const sessionTimeout = 2 * 60 * 1000; // Session timeout set to 15 minutes (in milliseconds)
+      const sessionTimeout = 45 * 60 * 1000; // Session timeout set to 15 minutes (in milliseconds)
 
       // Check if the session has expired
       if (currentTime - req.session.lastAccess > sessionTimeout) {
@@ -31,7 +31,7 @@ const sessionTimeoutMiddleware = (req, res, next) => {
 };
 
 // Session middleware setup
-// router.use(sessionTimeoutMiddleware);
+ router.use(sessionTimeoutMiddleware);
 
 /**
  * @swagger
