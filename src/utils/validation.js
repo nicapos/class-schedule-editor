@@ -15,7 +15,7 @@ function getValidator(key) {
 }
 
 function checkFileType(file, callback) {
-  const fileTypes = /jpeg|jpg|png/;
+  const fileTypes = /jpeg|jpg|png|json/;
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
   const mimeType = fileTypes.test(file.mimetype);
 
