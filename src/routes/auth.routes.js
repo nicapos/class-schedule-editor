@@ -37,7 +37,7 @@ const sessionTimeoutMiddleware = (req, res, next) => {
 };
 
 // Session middleware setup
-router.use(sessionTimeoutMiddleware);
+// router.use(sessionTimeoutMiddleware);
 
 /**
  * @swagger
