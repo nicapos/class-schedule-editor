@@ -9,29 +9,35 @@ const crypto = require("crypto");
 
 const router = Router();
 
-// Custom middleware to check router timeout
+// Custom middleware to check session timeout
 const sessionTimeoutMiddleware = (req, res, next) => {
-  // Check if the user has an active router
+  // Check if the user has an active session
   if (req.session && req.session.lastAccess) {
       const currentTime = new Date().getTime();
-      const routerTimeout = 2 * 60 * 1000; // router timeout set to 15 minutes (in milliseconds)
+      const sessionTimeout = 15 * 60 * 1000; // Session timeout set to 15 minutes (in milliseconds)
 
-      // Check if the router has expired
-      if (currentTime - req.session.lastAccess > routerTimeout) {
-          // If the router has expired, destroy the router and redirect to login page
-          req.session = null;
+      // Check if the session has expired
+      if (currentTime - req.session.lastAccess > sessionTimeout) {
+          // If the session has expired, destroy the session and redirect to login page
+          req.session.destroy((err) => {
+              if (err) {
+                  console.error('Error destroying session:', err);
+              }
+              res.redirect('/login'); // Redirect to your login page
+          });
+          return;
       }
   }
 
-  // Update lastAccess time in router
+  // Update lastAccess time in session
   req.session.lastAccess = new Date().getTime();
 
   // Call the next middleware
   next();
 };
 
-// router middleware setup
-router.use(sessionTimeoutMiddleware);
+// Session middleware setup
+// router.use(sessionTimeoutMiddleware);
 
 /**
  * @swagger
@@ -215,8 +221,8 @@ router.post("/login", async (req, res) => {
     });
 
     if (user) {
-      req.router.userId = user.dataValues.id;
-      req.router.userEmail = user.dataValues.email;
+      req.session.userId = user.dataValues.id;
+      req.session.userEmail = user.dataValues.email;
 
       res.status(200).json({ data: user.dataValues });
 
@@ -256,8 +262,8 @@ router.post("/login", async (req, res) => {
  *                    $ref: '#/components/schemas/Error'
  */
 router.post("/logout", async (req, res) => {
-  // Clear router data (for cookie-router)
-  req.router = null;
+  // Clear session data (for cookie-session)
+  req.session = null;
 
   return res.status(200).json({ message: "Logged out successfully" });
 });
