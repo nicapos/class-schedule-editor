@@ -2,7 +2,7 @@ const User = require("../models/User");
 const upload = require("../middleware/multer");
 const { getValidator } = require("../utils/validation");
 const uploadFile = require("../utils/uploads");
-const logger = require("../utils/logger");
+const { logger } = require("../utils/logger");
 
 const { Router } = require("express");
 const cryptoJS = require("crypto-js");
