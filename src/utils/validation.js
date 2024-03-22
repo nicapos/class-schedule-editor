@@ -19,8 +19,25 @@ function checkFileType(file, callback) {
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
   const mimeType = fileTypes.test(file.mimetype);
 
-  if (mimeType && extName) return callback(null, true);
+  var slice = file.slice(0,4);      
+    var reader = new FileReader();    
+    var flag = false;
+    reader.readAsArrayBuffer(slice);  
+    reader.onload = function(e) {
+        var buffer = reader.result;          
+        var view = new DataView(buffer);      
+        var signature = view.getUint32(0, false).toString(16);  
+        switch(signature) {                      
+          case "89504E47": file.verified_type = "image/png"; flag = true; break;
+          case "FFD8FFEE": file.verified_type = "image/jpeg"; flag = true; break;
+          case "FFD8FFEE": file.verified_type = "image/jpeg"; flag = true; break;
+          case "FFD8FFE0": file.verified_type = "image/jpeg"; flag = true; break;
+        }
+        
+  if (mimeType && extName && flag) return callback(null, true);
   return callback(null, false);
 }
 
 module.exports = { getValidator, checkFileType };
+
+}
