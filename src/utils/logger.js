@@ -20,4 +20,17 @@ const logger = createLogger({
   ],
 });
 
-module.exports = logger;
+const adminLogger = createLogger({
+  format: combine(
+    timestamp(),
+    colorize(),
+    logFormat
+  ),
+  transports: [
+    new transports.Console(), // For output to the console
+    new transports.File({ filename: 'logs/admin-error.log', level: 'error' }), // For error logging
+    new transports.File({ filename: 'logs/admin-combined.log' }) // For all logs
+  ],
+});
+
+module.exports = { logger, adminLogger };
