@@ -51,7 +51,7 @@ const useSchedule = (userId: string | undefined) => {
     }
   }
 
-  return { isLoading, schedule, daySchedule, triggerRefresh };
+  return { isLoading, schedule, daySchedule, setDaySchedule, triggerRefresh };
 };
 
 export default useSchedule;

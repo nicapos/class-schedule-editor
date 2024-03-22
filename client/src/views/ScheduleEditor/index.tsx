@@ -16,13 +16,15 @@ import useSchedule from "src/hooks/useSchedule";
 import EditClassModal from "./EditClassModal";
 import ImportScheduleModal from "./ImportScheduleModal";
 import { getNameInitials } from "src/lib/utils";
+import { DaySchedule } from "react-schedule-view";
+import { ClassEvent } from "src/types/calendar";
 
 const placeholderAvatar =
   "https://cdn.vectorstock.com/i/preview-1x/08/19/gray-photo-placeholder-icon-design-ui-vector-35850819.jpg";
 
 export default function ScheduleEditorPage() {
   const { isLoading: isUserLoading, user } = useCurrentUser();
-  const { isLoading: isScheduleLoading, schedule, daySchedule, triggerRefresh } = useSchedule(user?.id);
+  const { isLoading: isScheduleLoading, schedule, daySchedule, setDaySchedule, triggerRefresh } = useSchedule(user?.id);
   
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
@@ -91,8 +93,20 @@ export default function ScheduleEditorPage() {
   }
 
   function handleImport(file: File) {
-    // TODO: Handle file import
-  }
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        try {
+            const fileContent = reader.result;
+            const parsedData = JSON.parse(fileContent as string);
+            setDaySchedule(parsedData as DaySchedule<ClassEvent>[]);
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+        }
+    };
+
+    reader.readAsText(file);
+}
 
   function handleExport(){
     // Call getSchedule to get the schedule data from api schedule-service
