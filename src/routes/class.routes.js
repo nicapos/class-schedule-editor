@@ -1,5 +1,6 @@
 const ClassItem = require('../models/ClassItem');
 const { Router } = require("express");
+const { logger } = require("../utils/logger");
 
 const router = Router();
 
@@ -33,7 +34,7 @@ router.post('/', async (req, res) => {
     // Respond with the created class item
     res.status(201).json(newClassItem);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -61,7 +62,7 @@ router.get('/', async (req, res) => {
     const classItems = await ClassItem.findAll();
     res.json(classItems);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -101,7 +102,7 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).json(classItem);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -147,7 +148,7 @@ router.put('/:id', async (req, res) => {
     await classItem.update(req.body);
     res.status(201).json(classItem);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -183,7 +184,7 @@ router.delete('/:id', async (req, res) => {
     await classItem.destroy();
     res.status(200).json({ message: 'Class item deleted successfully' });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

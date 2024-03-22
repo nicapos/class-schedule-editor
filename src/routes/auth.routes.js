@@ -276,7 +276,7 @@ router.post('/uploadJSON', (req, res) => {
     const filePath = `./uploads/${req.file.filename}`;
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) {
-        console.error(err);
+        logger.error(err);
         return res.status(500).json({ message: 'Error reading the uploaded file' });
       }
       const scheduleJson = JSON.parse(data);

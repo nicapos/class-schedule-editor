@@ -1,6 +1,7 @@
 const express = require('express');
 const File = require('../models/File'); // Assuming you have a File model defined
 const mime = require('mime-types');
+const { logger } = require("../utils/logger");
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.get('/:filename', async (req, res) => {
 
     res.send(file.data);
   } catch (error) {
-    console.error('Error retrieving file:', error);
+    logger.error(`Error retrieving file:', ${error}`);
     res.status(500).send('Internal server error');
   }
 });

@@ -82,9 +82,10 @@ export default function AddClassModal({ scheduleId, handleAdd }: AddClassModalPr
       return false;
     }
     setErrorMessage('');
-
+    
     // Create one instance of ClassItem for every selected day
     const classItems = selectedDays.map((day) => ({ ...classItem, day } as ClassItem));
+    setSelectedDays([]);
 
     handleAdd(classItems);
   }

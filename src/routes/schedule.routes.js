@@ -2,6 +2,7 @@ const Schedule = require('../models/Schedule');
 const ClassItem = require('../models/ClassItem');
 const { Router } = require("express");
 const { timeToDecimal } = require('../utils/time');
+const { logger } = require("../utils/logger");
 
 const router = Router();
 
@@ -36,7 +37,7 @@ router.post('/', async (req, res) => {
     const schedule = await Schedule.create({ userId, name });
     res.status(201).json(schedule.dataValues);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -67,7 +68,7 @@ router.get('/', async (req, res) => {
     });
     res.status(200).json(schedules);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -130,7 +131,7 @@ router.get('/:id', async (req, res) => {
 
     return res.status(200).json(scheduleByDay);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -178,7 +179,7 @@ router.put('/:id', async (req, res) => {
     await schedule.update(req.body);
     res.json(schedule);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -214,7 +215,7 @@ router.delete('/:id', async (req, res) => {
     await schedule.destroy();
     res.json({ message: 'Schedule deleted successfully' });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
