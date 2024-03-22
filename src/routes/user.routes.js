@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const User = require("../models/User");
 const cryptoJS = require("crypto-js");
+const logger = require("../utils/logger");
 
 const router = Router();
 
@@ -71,6 +72,7 @@ router.get("/me", async (req, res) => {
 router.get("/all", async (req, res) => {
   // TODO: Check if user is admin
   const users = await User.findAll();
+  logger.log(`ADMIN: Fetched ${users.length} users`);
   return res.status(200).json({ data: users });
 });
 
@@ -125,6 +127,7 @@ router.put("/:id", async (req, res) => {
 
   try {
     await User.update(userData, { where: { id: userId } });
+    logger.log(`ADMIN: Updated user ${id}`);
     return res.send(201).end();
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -161,6 +164,7 @@ router.delete("/:id", async (req, res) => {
 
   try {
     await User.destroy({ where: { id: userId } });
+    logger.log(`ADMIN: Deleted user ${id}`);
     return res.sendStatus(204);
   } catch (error) {
     return res.status(500).json({ error: error.message });
