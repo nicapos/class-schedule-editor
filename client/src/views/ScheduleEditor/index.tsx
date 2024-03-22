@@ -93,16 +93,25 @@ export default function ScheduleEditorPage() {
   }
 
   function handleImport(file: File) {
+    if (!file) return;
+
+    // Check if the file type is JSON
+    if (file.type !== 'application/json') {
+        toast.error('Invalid import file upload (must be a JSON file)');
+        return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = () => {
-        try {
-            const fileContent = reader.result;
-            const parsedData = JSON.parse(fileContent as string);
-            setDaySchedule(parsedData as DaySchedule<ClassEvent>[]);
-        } catch (error) {
-            console.error('Error parsing JSON:', error);
-        }
+      try {
+          const fileContent = reader.result;
+          const parsedData = JSON.parse(fileContent as string);
+          setDaySchedule(parsedData as DaySchedule<ClassEvent>[]);
+          toast.success("Imported schedule.")
+      } catch (error) {
+          console.error('Error parsing JSON:', error);
+      }
     };
 
     reader.readAsText(file);
