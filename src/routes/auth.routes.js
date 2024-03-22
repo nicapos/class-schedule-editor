@@ -2,6 +2,7 @@ const User = require("../models/User");
 const upload = require("../middleware/multer");
 const { getValidator } = require("../utils/validation");
 const uploadFile = require("../utils/uploads");
+const logger = require("../utils/logger");
 
 const { Router } = require("express");
 const cryptoJS = require("crypto-js");
@@ -137,6 +138,7 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
       userType: "USER",
     });
 
+    logger.info(`Created user '${email}'`);
     return res.status(201).json({ data: user });
   } catch (error) {
     return res.status(400).json({ error: error.message });
@@ -218,8 +220,8 @@ router.post("/login", async (req, res) => {
       req.session.userId = user.dataValues.id;
       req.session.userEmail = user.dataValues.email;
 
+      logger.info(`User '${email}' has logged in`);
       res.status(200).json({ data: user.dataValues });
-
       return;
     }
     return res.status(400).json({
