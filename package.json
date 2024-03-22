@@ -4,17 +4,12 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "dev:server": "HTTPS=true SSL_CRT_FILE=./ssl/localhost.pem SSL_KEY_FILE=./ssl/localhost-key.pem nodemon src/app.js",
-    "dev:client": "HTTPS=true SSL_CRT_FILE=./ssl/localhost.pem SSL_KEY_FILE=./ssl/localhost-key.pem npm start --prefix ./client",
+    "dev:server": "HTTPS=true nodemon src/app.js",
+    "dev:client": "npm start --prefix ./client",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "build:server": "npx tsc",
     "build:client": "cd client && npm run build",
     "start:server": "node dist/index.js",
-
-    "dev:server:win": "($env:HTTPS = \"true\") -and ($env:SSL_CRT_FILE = \".\\ssl\\localhost.pem\") -and ($env:SSL_KEY_FILE = \".\\ssl\\localhost-key.pem\") -and (nodemon src\\app.js)",
-    "dev:client:win": "($env:HTTPS = \"true\") -and ($env:SSL_CRT_FILE = \".\\ssl\\localhost.pem\") -and ($env:SSL_KEY_FILE = \".\\ssl\\localhost-key.pem\") -and (npm start --prefix .\\client)",
-    "dev:win": "concurrently \"npm run dev:server:win\" \"npm run dev:client:win\"",
-
     "heroku-prebuild": "if [ ! -f .npm-installed ]; then npm install && touch .npm-installed && cd client && npm install; fi"
   },
   "author": "",
@@ -43,5 +38,8 @@
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "winston": "^3.12.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

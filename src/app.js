@@ -2,11 +2,14 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
+
 const swaggerDocs = require("./middleware/docs");
-const errorHandler = require('./middleware/errorHandler');
+const errorHandler = require("./middleware/errorHandler");
 
 const routes = require("./routes");
-
 const app = express();
 
 dotenv.config();
@@ -45,32 +48,34 @@ app.use("/", routes);
 // Setup DB
 const db = require("./models");
 
-// Configure SSL
-const fs = require('fs');
-const https = require('https');
-const key = fs.readFileSync('./ssl/localhost-key.pem');
-const cert = fs.readFileSync('./ssl/localhost.pem');
-const credentials = { key, cert };
-const httpsServer = https.createServer(credentials, app);
-
 // Check if --reset flag is present in the command-line arguments
-const hasResetFlag = process.argv.indexOf('--reset') !== -1;
+const hasResetFlag = process.argv.indexOf("--reset") !== -1;
 
-db.sequelize.sync({ force: hasResetFlag })
+db.sequelize
+  .sync({ force: hasResetFlag })
   .then(() => console.log("Synced db."))
   .catch((err) => console.log("Failed to sync db: " + err.message));
 
+// Configure SSL
+const options = {
+  key: fs.readFileSync(path.join(__dirname, "ssl", "localhost-key.pem")),
+  cert: fs.readFileSync(path.join(__dirname, "ssl", "localhost.pem")),
+};
 
 const PORT = process.env.PORT || 8080;
-// app.listen(PORT, () => {
-  httpsServer.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} (available at https://localhost:${PORT}/)`);
+https.createServer(options, app).listen(PORT, () => {
+  console.log(
+    `Server is running on port ${PORT} (available at https://localhost:${PORT}/)`
+  );
 
   // Show docs
   swaggerDocs(app, PORT);
 
   // Check DB connection
-  db.sequelize.authenticate()
-    .then(() => console.log('Connection has been established successfully.'))
-    .catch((error) => console.error('Unable to connect to the database:', error));
+  db.sequelize
+    .authenticate()
+    .then(() => console.log("Connection has been established successfully."))
+    .catch((error) =>
+      console.error("Unable to connect to the database:", error)
+    );
 });
