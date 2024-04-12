@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs"); 
 
 const regex = {
   email: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
@@ -14,30 +15,43 @@ function getValidator(key) {
   return (value) => regex[key].test(value);
 }
 
-function checkFileType(file, callback) {
-  const fileTypes = /jpeg|jpg|png|json/;
-  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimeType = fileTypes.test(file.mimetype);
+const fileTypes = ["jpeg", "jpg", "png", "json"];
 
-  var slice = file.slice(0,4);      
-    var reader = new FileReader();    
-    var flag = false;
-    reader.readAsArrayBuffer(slice);  
-    reader.onload = function(e) {
-        var buffer = reader.result;          
-        var view = new DataView(buffer);      
-        var signature = view.getUint32(0, false).toString(16);  
-        switch(signature) {                      
-          case "89504E47": file.verified_type = "image/png"; flag = true; break;
-          case "FFD8FFEE": file.verified_type = "image/jpeg"; flag = true; break;
-          case "FFD8FFEE": file.verified_type = "image/jpeg"; flag = true; break;
-          case "FFD8FFE0": file.verified_type = "image/jpeg"; flag = true; break;
-        }
-        
-  if (mimeType && extName && flag) return callback(null, true);
-  return callback(null, false);
-}
+// function checkFileType(file, callback) {
+//   const extName = path.extname(file.originalname).toLowerCase().substr(1);
+//   const mimeType = file.mimetype.split('/')[1];
 
-module.exports = { getValidator, checkFileType };
+//   if (!fileTypes.includes(extName) || !fileTypes.includes(mimeType)) {
+//     return callback(null, false);
+//   }
 
-}
+//   // Read first 4 bytes of the buffer to check the signature
+//   const buffer = file.buffer.slice(0, 4);
+//   const signature = buffer.toString('hex');
+//   let verifiedType = null;
+
+//   switch(signature) {
+//     case "89504e47":
+//       verifiedType = "image/png";
+//       break;
+//     case "ffd8ffe0":
+//     case "ffd8ffe1":
+//     case "ffd8ffe2":
+//     case "ffd8ffe3":
+//     case "ffd8ffe8":
+//       verifiedType = "image/jpeg";
+//       break;
+//     default:
+//       break;
+//   }
+
+//   if (verifiedType) {
+//     file.verifiedType = verifiedType;
+//     callback(null, true);
+//   } else {
+//     callback(null, false);
+//   }
+// }
+
+// module.exports = { getValidator, checkFileType };
+module.exports = { getValidator};
