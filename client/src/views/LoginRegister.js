@@ -162,7 +162,7 @@ function Login() {
         </div>
 
         <div className="google-login">
-          Login with Google? <span onClick={handleGoogleLogin}>Click Here</span>
+          No Account yet? Sign Up Using Google <span onClick={handleGoogleLogin}>Click Here</span>
         </div>
       </>
     );

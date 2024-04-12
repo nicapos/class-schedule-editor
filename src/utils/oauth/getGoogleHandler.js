@@ -6,60 +6,38 @@ const User = require('../../models/User');
 async function googleOauthHandler(req, res) {
     const code = req.query.code;
   
-    try {
       const { id_token, access_token } = await getGoogleOAuthTokens({ code });
       console.log({ id_token, access_token });
-  
+
       const googleUser = await getGoogleUser({ id_token, access_token });
-      console.log({ googleUser });
-  
-      if (!googleUser.verified_email) {
-        return res.status(403).send("Google account is not verified");
-      }
-    } catch (error) {
-        console.error(error);
-        return res.status(400).send("Failed to authorize Google user");
+      console.log(googleUser.name);
+
+    try
+      {// Register new User
+        const user = await User.create({
+          email: googleUser.email, 
+          password: 'P@ssw0rd',
+          fullName: googleUser.name,
+          photoUrl: googleUser.picture,
+          phoneNumber: '09876453627',
+          userType: 'USER'
+        });
+
+        alert('User created successfully. Proceed to Login');
+
+        // Log in existing User
+        const n = await User.findByEmail(googleUser.email);
+        
+        if (!n) {
+          return res.redirect('/login');
+        } else {
+          
+          req.session.userId = user.id;
+          return res.redirect('/login');
+        }}
+    catch(error){
+        res.status(400).json({ error: error.message });
     }
-  
-    //   const user = await findAndUpdateUser(
-    //     {
-    //       email: googleUser.email,
-    //     },
-    //     {
-    //       email: googleUser.email,
-    //       name: googleUser.name,
-    //       picture: googleUser.picture,
-    //     },
-    //     {
-    //       upsert: true,
-    //       new: true,
-    //     }
-    //   );
-
-    // Create & log in user
-    
-
-  
-    //   const session = await createSession(user._id, req.get("user-agent") || "");
-  
-    //   const accessToken = signJwt(
-    //     { ...user.toJSON(), session: session._id },
-    //     { expiresIn: config.get("accessTokenTtl") } // 15 minutes
-    //   );
-  
-    //   const refreshToken = signJwt(
-    //     { ...user.toJSON(), session: session._id },
-    //     { expiresIn: config.get("refreshTokenTtl") } // 1 year
-    //   );
-  
-    //   res.cookie("accessToken", accessToken, { maxAge: config.get("accessTokenTtl"), httpOnly: true });
-    //   res.cookie("refreshToken", refreshToken, { maxAge: config.get("refreshTokenTtl"), httpOnly: true });
-  
-    //   res.redirect(config.get("origin"));
-    // } catch (error) {
-    //   log.error(error, "Failed to authorize Google user");
-    //   return res.redirect(`${config.get("origin")}/oauth/error`);
-    // }
 }
 
 

@@ -49,22 +49,44 @@ async function getGoogleOAuthTokens({ code }) {
     grant_type: "authorization_code",
   };
 
-  try {
-    const res = await axios.post<GoogleTokensResult>(
-        url,
-        qs.stringify(values),
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+  const postData = qs.stringify(values);
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(postData)
+    }
+  };
+
+  return new Promise((resolve, reject) => {
+    const req = https.request(url, options, (res) => {
+      let data = '';
+
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        try {
+          const responseData = JSON.parse(data);
+          resolve(responseData);
+        } catch (error) {
+          reject(error);
         }
-      );
-      return res.data;  
-  } catch (error) {
-    console.log(error);
-    throw new Error(error.message);
-  }
+      });
+    });
+
+    req.on('error', (error) => {
+      reject(error);
+    });
+
+    req.write(postData);
+    req.end();
+  });
 }
+
+
 
 async function getGoogleUser({ id_token, access_token }) {
     try {

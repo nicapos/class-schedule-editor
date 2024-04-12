@@ -7,7 +7,7 @@ function getGoogleOAuthURL(){
         access_type: 'offline',
         response_type: 'code',
         prompt: 'consent',
-        scope: 'openid'
+        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid',
     }
 
     const qs = new URLSearchParams(options);
