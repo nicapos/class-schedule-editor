@@ -48,9 +48,14 @@ const db = require("./models");
 // Check if --reset flag is present in the command-line arguments
 const hasResetFlag = process.argv.indexOf("--reset") !== -1;
 
-db.sequelize
+db.sequelize1
   .sync({ force: hasResetFlag })
-  .then(() => console.log("Synced db."))
+  .then(() => console.log("Synced db1."))
+  .catch((err) => console.log("Failed to sync db: " + err.message));
+
+db.sequelize2
+  .sync({ force: hasResetFlag })
+  .then(() => console.log("Synced db1."))
   .catch((err) => console.log("Failed to sync db: " + err.message));
 
 const PORT = process.env.PORT || 8080;
@@ -63,9 +68,16 @@ app.listen(PORT, () => {
   swaggerDocs(app, PORT);
 
   // Check DB connection
-  db.sequelize
+  db.sequelize1
     .authenticate()
-    .then(() => console.log("Connection has been established successfully."))
+    .then(() => console.log("Connection to DB1 has been established successfully."))
+    .catch((error) =>
+      console.error("Unable to connect to the database:", error)
+    );
+
+  db.sequelize2
+    .authenticate()
+    .then(() => console.log("Connection to DB2 has been established successfully."))
     .catch((error) =>
       console.error("Unable to connect to the database:", error)
     );
