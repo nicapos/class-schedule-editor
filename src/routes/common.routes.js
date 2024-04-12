@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const User = require("../models/User");
 const { getGoogleOAuthURL } = require('../utils/oauth/getGoogleUrl');
-const { getGoogleOAuthHandler } = require('../utils/oauth/getGoogleHandler');
+const { googleOauthHandler } = require('../utils/oauth/getGoogleHandler');
 
 const router = Router();
 
@@ -61,15 +61,19 @@ router.get("/users", async (req, res) => {
 
 // For Google OAuth redirect URI (/api/google-login)
 router.get("/google-login", async (req, res) => {
-   // Get the Google OAuth URL
-  const googleOAuthURL = getGoogleOAuthURL();
-  // Send the Google OAuth URL as a response
-  res.status(200).json({ googleOAuthURL });
+  try{
+    const googleOAuthURL = getGoogleOAuthURL();
+    console.log(googleOAuthURL);
+    res.status(200).json({ googleOAuthURL });
+  }
+  catch(error){
+    res.status(400).json({ error: error.message });
+  }
 }); 
 
 // For Google OAuth endpoint (/api/sessions/oauth/google)
 router.get("/sessions/oauth/google", async (req, res) => {
-  
+  googleOauthHandler(req, res);
 }); 
 
 module.exports = router;
