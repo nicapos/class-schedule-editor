@@ -2,9 +2,6 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
-const fs = require("fs");
-const path = require("path");
-const https = require("https");
 
 const swaggerDocs = require("./middleware/docs");
 const errorHandler = require("./middleware/errorHandler");
@@ -56,16 +53,10 @@ db.sequelize
   .then(() => console.log("Synced db."))
   .catch((err) => console.log("Failed to sync db: " + err.message));
 
-// Configure SSL
-const options = {
-  key: fs.readFileSync(path.join(__dirname, "ssl", "localhost-key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "ssl", "localhost.pem")),
-};
-
 const PORT = process.env.PORT || 8080;
-https.createServer(options, app).listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(
-    `Server is running on port ${PORT} (available at https://localhost:${PORT}/)`
+    `Server is running on port ${PORT} (available at http://localhost:${PORT}/)`
   );
 
   // Show docs

@@ -28,7 +28,7 @@ function Login() {
 
   function registerUser(formData) {
     setLoading(true); // Start registration process
-    fetch("https://localhost:8080/api/auth/register", {
+    fetch("http://localhost:8080/api/auth/register", {
       method: "POST",
       body: formData,
     })
@@ -79,7 +79,7 @@ function Login() {
   }
 
   function googleLogin() {
-    fetch("https://localhost:8080/api/google-login")
+    fetch("http://localhost:8080/api/google-login")
     .then((response) => response.json())
     .then((data) => {
       if (data && data.googleOAuthURL) {
@@ -96,7 +96,7 @@ function Login() {
   } 
 
   function loginUser({ email, password }) {
-    fetch("https://localhost:8080/api/auth/login", {
+    fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

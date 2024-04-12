@@ -2,7 +2,7 @@ import { User } from "../types";
 import qs from 'qs';
 import config from 'config';
 
-const baseURL = "https://localhost:8080/api";
+const baseURL = "http://localhost:8080/api";
 
 const UserService = {
   getCurrentUser: async (): Promise<User> => {

@@ -46,7 +46,7 @@ async function uploadFile(fileBuffer, fileName) {
 
     console.log(`Image ${fileName} uploaded to ${bucketName}.`);
 
-    return `https://localhost:8080/api/file/${newFileName}`;
+    return `http://localhost:8080/api/file/${newFileName}`;
   } catch (error) {
     console.error(`Error uploading image ${fileName}: ${error}`);
     throw error;
