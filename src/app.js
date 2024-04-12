@@ -58,27 +58,41 @@ db.sequelize2
   .then(() => console.log("Synced db1."))
   .catch((err) => console.log("Failed to sync db: " + err.message));
 
+
+function startServer(port) {
+  port = parseInt(port);
+  
+  app.listen(port, () => {
+    console.log(
+      `Server is running on port ${port} (available at http://localhost:${port}/)`
+    );
+  
+    // Show docs
+    swaggerDocs(app, port);
+  
+    // Check DB connection
+    db.sequelize1
+      .authenticate()
+      .then(() => console.log("Connection to DB1 has been established successfully."))
+      .catch((error) =>
+        console.error("Unable to connect to the database:", error)
+      );
+  
+    db.sequelize2
+      .authenticate()
+      .then(() => console.log("Connection to DB2 has been established successfully."))
+      .catch((error) =>
+        console.error("Unable to connect to the database:", error)
+      );
+  }).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`Port ${port} is already in use. Trying port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+}
+
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(
-    `Server is running on port ${PORT} (available at http://localhost:${PORT}/)`
-  );
-
-  // Show docs
-  swaggerDocs(app, PORT);
-
-  // Check DB connection
-  db.sequelize1
-    .authenticate()
-    .then(() => console.log("Connection to DB1 has been established successfully."))
-    .catch((error) =>
-      console.error("Unable to connect to the database:", error)
-    );
-
-  db.sequelize2
-    .authenticate()
-    .then(() => console.log("Connection to DB2 has been established successfully."))
-    .catch((error) =>
-      console.error("Unable to connect to the database:", error)
-    );
-});
+startServer(PORT);
