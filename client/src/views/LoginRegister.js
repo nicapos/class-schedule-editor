@@ -78,6 +78,23 @@ function Login() {
     return true;
   }
 
+  function googleLogin() {
+    fetch("https://localhost:8080/api/google-login")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data && data.googleOAuthURL) {
+        // Redirect the user to the Google OAuth URL
+        window.location.href = data.googleOAuthURL;
+      } else {
+        throw new Error("Failed to get Google OAuth URL");
+      }
+    })
+    .catch((error) => {
+      console.error("Google login error:", error);
+      // Handle the error, e.g., display a message to the user
+    });
+  } 
+
   function loginUser({ email, password }) {
     fetch("https://localhost:8080/api/auth/login", {
       method: "POST",
@@ -124,6 +141,10 @@ function Login() {
   }
 
   function renderLogin() {
+    const handleGoogleLogin = () => {
+      googleLogin();
+    };  
+
     return (
       <>
         <div className="input">
@@ -140,8 +161,8 @@ function Login() {
           />
         </div>
 
-        <div className="forgot-password">
-          Forgot Password? <span>Click Here</span>
+        <div className="google-login">
+          Login with Google? <span onClick={handleGoogleLogin}>Click Here</span>
         </div>
       </>
     );

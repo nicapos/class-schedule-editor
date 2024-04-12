@@ -85,14 +85,14 @@
   color: #4b2e39;
 }
 
-#auth-page .forgot-password {
+#auth-page .google-login {
   padding-left: 30%;
   margin-top: 10px;
   color: #6f7d8c;
   font-size: 18px;
 }
 
-#auth-page .forgot-password span {
+#auth-page .google-login span {
   color: #4b2e39;
   cursor: pointer;
   font-weight: 500;

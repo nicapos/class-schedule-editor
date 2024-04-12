@@ -3,10 +3,8 @@ const upload = require("../middleware/multer");
 const { getValidator } = require("../utils/validation");
 const uploadFile = require("../utils/uploads");
 const { logger } = require("../utils/logger");
-
 const { Router } = require("express");
 const cryptoJS = require("crypto-js");
-const crypto = require("crypto");
 
 const router = Router();
 
@@ -284,5 +282,6 @@ router.post('/uploadJSON', (req, res) => {
     });
   });
 });
+
 
 module.exports = router;

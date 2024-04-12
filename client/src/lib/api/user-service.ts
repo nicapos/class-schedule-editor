@@ -1,4 +1,6 @@
 import { User } from "../types";
+import qs from 'qs';
+import config from 'config';
 
 const baseURL = "https://localhost:8080/api";
 
@@ -60,7 +62,7 @@ const UserService = {
         const { error } = await response.json();
         throw new Error(error || "Failed to delete user");
     }
-  },
+  }
 };
 
 export default UserService;
