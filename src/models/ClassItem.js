@@ -1,6 +1,7 @@
 const Schedule = require('./Schedule');
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./index');
+const { ClassItem: _ClassItem } = require('./replicas/ClassItem');
 
 const WEEK_DAY_ENUM = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -104,4 +105,16 @@ const ClassItem = sequelize.define('ClassItem', {
 
 ClassItem.belongsTo(Schedule, { foreignKey: 'scheduleId' });
 
+// Setup replication via hook
+ClassItem.afterCreate((instance, options) => {
+  // Handle the creation of a new record in ClassItem
+  // Replicate the data to ClassItem in DB2
+  _ClassItem.create(instance.dataValues)
+    .then(targetInstance => {
+      console.log(`Replicated data to _ClassItem with ID: ${targetInstance.id}`);
+    })
+    .catch(error => {
+      console.error('Error replicating data to _ClassItem:', error);
+    });
+});
 module.exports = ClassItem;

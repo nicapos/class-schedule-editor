@@ -2,6 +2,7 @@ const User = require('./User');
 const { Sequelize, DataTypes } = require('sequelize');
 const { sequelize } = require('./index');
 const nanoid = require('../utils/id');
+const { Schedule: _Schedule } = require('./replicas/Schedule');
 
 /**
  * @swagger
@@ -52,5 +53,18 @@ const Schedule = sequelize.define('ClassSchedule', {
 });
 
 Schedule.belongsTo(User, { foreignKey: 'userId' });
+
+// Setup replication via hook
+Schedule.afterCreate((instance, options) => {
+  // Handle the creation of a new record in Schedule
+  // Replicate the data to Schedule in DB2
+  _Schedule.create(instance.dataValues)
+    .then(targetInstance => {
+      console.log(`Replicated data to _Schedule with ID: ${targetInstance.id}`);
+    })
+    .catch(error => {
+      console.error('Error replicating data to _Schedule:', error);
+    });
+});
 
 module.exports = Schedule;

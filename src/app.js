@@ -44,19 +44,20 @@ app.use("/", routes);
 
 // Setup DB
 const db = require("./models");
+const replicaDb = require("./models/replicas")
 
 // Check if --reset flag is present in the command-line arguments
 const hasResetFlag = process.argv.indexOf("--reset") !== -1;
 
-db.sequelize1
+db.sequelize
   .sync({ force: hasResetFlag })
   .then(() => console.log("Synced db1."))
-  .catch((err) => console.log("Failed to sync db: " + err.message));
+  .catch((err) => console.log("Failed to sync db1: " + err.message));
 
-db.sequelize2
+replicaDb.sequelize
   .sync({ force: hasResetFlag })
-  .then(() => console.log("Synced db1."))
-  .catch((err) => console.log("Failed to sync db: " + err.message));
+  .then(() => console.log("Synced db2."))
+  .catch((err) => console.log("Failed to sync db2: " + err.message));
 
 
 function startServer(port) {
@@ -71,14 +72,14 @@ function startServer(port) {
     swaggerDocs(app, port);
   
     // Check DB connection
-    db.sequelize1
+    db.sequelize
       .authenticate()
       .then(() => console.log("Connection to DB1 has been established successfully."))
       .catch((error) =>
         console.error("Unable to connect to the database:", error)
       );
   
-    db.sequelize2
+      replicaDb.sequelize
       .authenticate()
       .then(() => console.log("Connection to DB2 has been established successfully."))
       .catch((error) =>

@@ -14,19 +14,19 @@ const sequelizeOptions = {
   }
 };
 
-const sequelize = new Sequelize(process.env.DATABASE1_URL, sequelizeOptions);
+const sequelize = new Sequelize(process.env.DATABASE2_URL, sequelizeOptions);
 
 const db = {};
 
 db.Sequelize = Sequelize;
-db.sequelize = sequelize; // by default, sequelize refers to DATABASE1
+db.sequelize = sequelize;
 db.isAvailable = async () => {
   try {
     await sequelize.authenticate();
-    console.log("Connection to db1 has been established");
+    console.log("Connection to db2 has been established");
     return true;
   } catch (error) {
-    console.error("Unable to connect to db1:", error);
+    console.error("Unable to connect to db2:", error);
     return false;
   }
 }

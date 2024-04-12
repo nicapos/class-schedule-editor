@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { sequelize } = require('./index');
+const { User: _User } = require('./replicas/User');
 
 /**
  * @swagger
@@ -96,5 +97,18 @@ User.findByEmailAndId = async function (email, id) {
     throw new Error('Error finding user by email and id: ' + error.message);
   }
 };
+
+// Setup replication via hook
+User.afterCreate((instance, options) => {
+  // Handle the creation of a new record in User
+  // Replicate the data to User in DB2
+  _User.create(instance.dataValues)
+    .then(targetInstance => {
+      console.log(`Replicated data to _User with ID: ${targetInstance.id}`);
+    })
+    .catch(error => {
+      console.error('Error replicating data to _User:', error);
+    });
+});
 
 module.exports = User;
