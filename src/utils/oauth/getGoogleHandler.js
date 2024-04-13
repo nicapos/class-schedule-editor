@@ -10,35 +10,38 @@ async function googleOauthHandler(req, res) {
       console.log({ id_token, access_token });
 
       const googleUser = await getGoogleUser({ id_token, access_token });
-      console.log(googleUser.name);
+      console.log(googleUser); // Already authenticated
 
-    try
-      {// Register new User
-        const user = await User.create({
+
+
+      // Set user ID in session and redirect to login page
+      // console.log('User is Authenticated. Proceed to Login');
+      // req.session.user = googleUser._id;
+      // return res.redirect('/login');
+
+      // // Check if user exists
+      // const existingUser = await User.findByEmailAndId(googleUser.email, googleUser.id);
+      // console.log(existingUser);
+
+      // if (!existingUser) {
+      //   // If not exist, register
+      try
+      {  let user = await User.create({
           email: googleUser.email, 
           password: 'P@ssw0rd',
           fullName: googleUser.name,
           photoUrl: googleUser.picture,
           phoneNumber: '09876453627',
           userType: 'USER'
-        });
-
-        alert('User created successfully. Proceed to Login');
-
-        // Log in existing User
-        const n = await User.findByEmail(googleUser.email);
+        }) 
+        req.session.user = user._id;
         
-        if (!n) {
-          return res.redirect('/login');
-        } else {
-          
-          req.session.userId = user.id;
-          return res.redirect('/login');
-        }}
-    catch(error){
-        res.status(400).json({ error: error.message });
-    }
+        req.end();
+        res.redirect('/api/auth/login');}
+        
+        catch(err){
+          return res.status(400).json({ error: err.message });
+        }
 }
-
 
 module.exports = { googleOauthHandler };

@@ -63,7 +63,7 @@ router.get("/users", async (req, res) => {
 router.get("/google-login", async (req, res) => {
   try{
     const googleOAuthURL = getGoogleOAuthURL();
-    console.log(googleOAuthURL);
+    // console.log(googleOAuthURL);
     res.status(200).json({ googleOAuthURL });
   }
   catch(error){
@@ -74,6 +74,11 @@ router.get("/google-login", async (req, res) => {
 // For Google OAuth endpoint (/api/sessions/oauth/google)
 router.get("/sessions/oauth/google", async (req, res) => {
   googleOauthHandler(req, res);
+  // proceed to login
+  // If user is created successfully, send a response to the client
+  // res.status(201).json({ message: 'User created successfully. Proceed to Login' });
+  // res.status(200).json({ user });
+
 }); 
 
 module.exports = router;
