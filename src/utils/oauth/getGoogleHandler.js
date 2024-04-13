@@ -25,23 +25,29 @@ async function googleOauthHandler(req, res) {
 
       // if (!existingUser) {
       //   // If not exist, register
-      try
-      {  let user = await User.create({
-          email: googleUser.email, 
-          password: 'P@ssw0rd',
-          fullName: googleUser.name,
-          photoUrl: googleUser.picture,
-          phoneNumber: '09876453627',
-          userType: 'USER'
-        }) 
-        req.session.user = user._id;
-        
-        req.end();
-        res.redirect('/api/auth/login');}
-        
-        catch(err){
-          return res.status(400).json({ error: err.message });
+      try {
+        // Check if user with the given email already exists
+        const user = await User.findByEmail(googleUser.email);
+
+        if (!user) {
+            // If user doesn't exist, create a new one
+            user = await User.create({
+                email: googleUser.email, 
+                password: 'P@ssw0rd',
+                fullName: googleUser.name,
+                photoUrl: googleUser.picture,
+                phoneNumber: '09876453627',
+                userType: 'USER'
+            });
+            console.log('User created successfully. Proceed to Login');
         }
+
+        // Set the user ID in session
+        req.session.user = user._id;
+        res.redirect(`/api/auth/login?email=${encodeURIComponent(googleUser.email)}&password=${encodeURIComponent(googleUser.password)}`);
+    } catch (err) {
+        return res.status(400).json({ error: err.message });
+    }
 }
 
 module.exports = { googleOauthHandler };

@@ -98,6 +98,17 @@ User.findByEmailAndId = async function (email, id) {
   }
 };
 
+User.findByEmail = async function (email) {
+  try {
+    const user = await User.findOne({
+      where: { email},
+    });
+    return user;
+  } catch (error) {
+    throw new Error('Error finding user by email: ' + error.message);
+  }
+};
+
 // Setup replication via hook
 User.afterCreate((instance, options) => {
   // Handle the creation of a new record in User
